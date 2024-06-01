@@ -48,10 +48,10 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className='link'>
-            <a href='index'>
+            <Link to='/students'>
               <i className="bi bi-people-fill"></i>
               Students
-            </a>
+            </Link>
           </li>
           <li className='link'>
             <Link to='/courses'>
