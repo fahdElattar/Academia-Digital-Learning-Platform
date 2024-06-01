@@ -1,0 +1,16 @@
+.sectors-name {
+    color: #434A54;
+    font-size: 1.3rem;
+}
+
+.sectors-label {
+    color: #6C757D;
+    font-size: .9rem;
+    font-weight: 400;
+}
+
+.sectors-description {
+    color: #434A54;
+    font-size: .8rem;
+    font-weight: 400;
+}

@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import Courses from './Pages/Courses'
 import Professors from './Pages/Professors'
 import Students from './Pages/Students'
+import Departements from './Pages/Departements'
+import Sectors from './Pages/Sectors'
 
 function App() {
 
@@ -17,6 +19,8 @@ function App() {
           <Route path='/courses' element={<Courses />}/>
           <Route path='/professors' element={<Professors />}/>
           <Route path='/students' element={<Students />}/>
+          <Route path='/departements' element={<Departements />}/>
+          <Route path='/sectors' element={<Sectors />}/>
         </Routes>
       </BrowserRouter>
     </div>

@@ -60,16 +60,16 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className='link'>
-            <a href='index'>
+            <Link to='/sectors'>
               <i className="bi bi-collection-fill"></i>
               Sectors
-            </a>
+            </Link>
           </li>
           <li className='link'>
-            <a href='index'>
+            <Link to='/departements'>
               <i className="bi bi-building-fill"></i>
               Departments
-            </a>
+            </Link>
           </li>
         </ul>
         <div className='extra'>

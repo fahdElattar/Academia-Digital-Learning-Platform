@@ -1,0 +1,16 @@
+.departement-name {
+    color: #434A54;
+    font-size: 1.3rem;
+}
+
+.departement-label {
+    color: #6C757D;
+    font-size: .9rem;
+    font-weight: 400;
+}
+
+.departement-description {
+    color: #434A54;
+    font-size: .8rem;
+    font-weight: 400;
+}

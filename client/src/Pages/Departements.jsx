@@ -1,10 +1,9 @@
 import React from 'react'
 import StarterPage from '../Components/StarterPage'
-import '../Css/Courses.css'
-import Pc from '../assets/img/pc.jpg'
-import avatar from '../assets/img/avatar.jpg'
+import '../Css/Departements.css'
+import avatar from '../assets/img/avatar1.jpg'
 
-const Courses = ({pageName='Courses'}) => {
+const Courses = ({pageName='Departements'}) => {
     return (
       <StarterPage>
 
@@ -36,35 +35,45 @@ const Courses = ({pageName='Courses'}) => {
         <div className="section-body mt-4">
           <div className="container-fluid p-0">
             <div className="row">
-              {/* Course */}
-              <div className="col-xl-4 col-lg-4 col-md-6">
+              {/* Departement */}
+              <div className="col-xl-4 col-md-6 col-sm-12">
                 <div className="card">
-                  <a href="#">
-                    <img className="card-img-top" src={Pc} alt="Course image" />
-                  </a>
-                  <div className="card-body d-flex flex-column px-4 pb-3">
-                    <h6 className='blueHover'><a href="" className='text-decoration-none'>PHP Development Course</a></h6>
-                    <p className="text-muted text-capitalize small-para">A full course on backend tech PHP Development!!!</p>
+                  <div className="card-body">
+                    <div className="card-status bg-primary"></div>
+                    <div className="mb-1">
+                      <h5 className="mb-0 departement-name">Computer Science</h5>
+                    </div>
+                    <div className="mb-0">
+                      <h5 className="mb-2 departement-label">Departement</h5>
+                      <span className='mt-0 departement-description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti fugit incidunt</span>
+                    </div>
                   </div>
-                  <div className="card-footer">
+                  <div className="card-footer p-3">
                     <div className="d-flex align-items-center justify-content-between mt-auto">
                       <div className="d-flex flex-row align-items-center">
-                        <img className="avatar avatar-md me-3" src={avatar} alt="avatar" />
+                        <i className="bi bi-collection-fill avatar avatar-md me-3 text-light bg-primary"></i>
                         <div>
-                          <a href="" className='text-decoration-none'>Pro. Jane</a>
-                          <small className="d-block text-muted">Head OF Dept.</small>
+                          <a href="" className='text-decoration-none'>Sectors</a>
+                          <small className="d-block text-muted">5 Availables</small>
                         </div>
                       </div>
                       <div className="ml-auto text-muted float-end">
-                        <a href="" className="icon d-none d-md-inline-block ml-3"><i className="bi bi-heart mr-1"></i> 521</a>
+                        <button type="button" className="btn btn-icon btn-sm">
+                          <i className="bi bi-pencil text-success"></i>
+                        </button>
+                        <button type="button" className="btn btn-icon btn-sm js-sweetalert">
+                          <i className="bi bi-trash text-danger"></i>
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
+        
       </StarterPage>
     )
   }
