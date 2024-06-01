@@ -48,26 +48,21 @@ const Courses = ({pageName='Sectors'}) => {
                       <span className='mt-0 sectors-description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti fugit incidunt</span>
                     </div>
                   </div>
-                  <div className="card-footer px-3 py-1">
+                  <div className="card-footer p-3">
                     <div className="d-flex align-items-center justify-content-between mt-auto">
                       <div className="d-flex flex-row align-items-center">
+                        <i className="bi bi-award-fill avatar avatar-md me-3 text-light bg-primary"></i>
                         <div>
-                          <span className="font-12 text-muted">Professors</span>
-                          <ul className="list-unstyled team-info">
-                            <li><img src={avatar} alt="Professor" /></li>
-                            <li><img src={avatar} alt="Professor" /></li>
-                            <li><img src={avatar} alt="Professor" /></li>
-                          </ul>
+                          <a href="" className='text-decoration-none'>Professors</a>
+                          <small className="d-block text-muted">5 Availables</small>
                         </div>
                       </div>
                       <div className="ml-auto text-muted float-end">
-                        <button type="button" className="btn btn-outline-success btn-sm me-2">
-                          <i className="bi bi-pencil me-1"></i>
-                          Edit
+                        <button type="button" className="btn btn-icon btn-sm">
+                          <i className="bi bi-pencil text-success"></i>
                         </button>
-                        <button type="button" className="btn btn-outline-danger btn-sm">
-                          <i className="bi bi-trash me-1"></i>
-                          Delete
+                        <button type="button" className="btn btn-icon btn-sm js-sweetalert">
+                          <i className="bi bi-trash text-danger"></i>
                         </button>
                       </div>
                     </div>
