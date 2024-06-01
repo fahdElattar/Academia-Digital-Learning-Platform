@@ -74,6 +74,11 @@
 .sidebar .left-side .down-area .links .link {
   font-size: 1.2rem;
   cursor: pointer;
+  transition: .2s ease-in-out;
+}
+
+.sidebar .left-side .down-area .links .link:hover {
+  color: var(--blueHover);
 }
 
 .sidebar .right-side {
@@ -169,3 +174,5 @@
   font-size: .7rem;
   font-weight: 400;
 }
+
+/* resusable css */

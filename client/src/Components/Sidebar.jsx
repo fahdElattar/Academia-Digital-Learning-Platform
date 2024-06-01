@@ -15,7 +15,11 @@ const Sidebar = () => {
         </div>
         <div className="down-area">
           <ul className='links'>
-            <li className='link'><i className="bi bi-power"></i></li>
+            <li className='link'>
+              <Link to='/login' className='text-dark '>
+                <i className="bi bi-power"></i>
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
@@ -38,7 +42,7 @@ const Sidebar = () => {
         </div>
         <ul className='links'>
           <li className='link'>
-            <Link to='/login'>
+            <Link to='/professors'>
               <i className="bi bi-award-fill"></i>
               Professors
             </Link>
@@ -50,10 +54,10 @@ const Sidebar = () => {
             </a>
           </li>
           <li className='link'>
-            <a href='index'>
+            <Link to='/courses'>
               <i className="bi bi-journal-bookmark-fill"></i>
               Courses
-            </a>
+            </Link>
           </li>
           <li className='link'>
             <a href='index'>

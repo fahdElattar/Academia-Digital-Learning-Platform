@@ -1,12 +1,15 @@
 import React from 'react'
 import StarterPage from '../Components/StarterPage'
-import '../Css/Index.css'
+import '../Css/Courses.css'
 import Pc from '../assets/img/pc.jpg'
 import avatar from '../assets/img/avatar.jpg'
 
-const Index = ({pageName='Courses'}) => {
+const Courses = ({pageName='Courses'}) => {
     return (
       <StarterPage>
+
+        {/* Page Header */}
+
         <div className="page-head d-flex justify-content-between p-0 ">
           <div className="name d-flex flex-column justify-content-lg-start pt-2">
             <div className="top-name">
@@ -27,10 +30,14 @@ const Index = ({pageName='Courses'}) => {
             </ul>
           </div>
         </div>
+
+        {/* Page Body */}
+
         <div className="section-body mt-4">
           <div className="container-fluid p-0">
             <div className="row">
-              <div className="col-xl-4 col-lg-4 col-md-4">
+              {/* Course */}
+              <div className="col-xl-4 col-lg-4 col-md-6">
                 <div className="card">
                   <a href="#">
                     <img className="card-img-top" src={Pc} alt="Course image" />
@@ -63,4 +70,4 @@ const Index = ({pageName='Courses'}) => {
     )
   }
 
-export default Index
+export default Courses

@@ -1,0 +1,19 @@
+.professor h5 {
+    color: #434A54;
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+.professor span {
+    font-size: .9rem;
+}
+
+.professor div {
+    color: #6C757D;
+    font-size: .9rem;
+    font-weight: 400;
+}
+
+.professor p {
+    font-size: .9rem;
+}

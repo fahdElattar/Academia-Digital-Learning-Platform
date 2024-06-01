@@ -3,7 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Login from './Pages/Login'
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
-import Index from './Pages/Index'
+import Courses from './Pages/Courses'
+import Professors from './Pages/Professors'
 
 function App() {
 
@@ -12,7 +13,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/login' element={<Login />}/>
-          <Route path='/index' element={<Index />}/>
+          <Route path='/courses' element={<Courses />}/>
+          <Route path='/professors' element={<Professors />}/>
         </Routes>
       </BrowserRouter>
     </div>
