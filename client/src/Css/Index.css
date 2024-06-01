@@ -5,3 +5,30 @@
 .bottom-name p {
     font-size: .8rem;
 }
+
+.links .list-unstyled li a {
+    color: var(--softGrey);
+    font-size: .9rem;
+    cursor: pointer;
+    height: 100%;
+}
+
+.links .list-unstyled .li-active {
+    border-top: 1px solid var(--blueHover);
+}
+
+.links .list-unstyled .li-active a {
+    color: var(--blueHover);
+}
+
+.blueHover {
+    transition: .3s ease-in-out;
+}
+
+.blueHover:hover {
+    color: var(--blueHover);
+}
+
+.small-para {
+    font-size: .9rem;
+}

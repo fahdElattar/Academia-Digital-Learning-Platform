@@ -22,7 +22,7 @@ const Sidebar = () => {
       <div className="right-side">
         <div className="logo-name">
           <h2>Academia</h2>
-            <a href='javascript:void(0)'>
+            <a href=''>
               <i className="bi bi-grid"></i>
             </a>
         </div>
