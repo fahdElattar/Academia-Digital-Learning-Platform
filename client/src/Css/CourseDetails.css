@@ -57,3 +57,11 @@ video {
 .slide-out {
     transform: translateY(0);
 }
+
+.hoverBlue {
+    transition: .2s ease-in-out;
+}
+
+.hoverBlue:hover {
+    color: var(--blueHover);
+}

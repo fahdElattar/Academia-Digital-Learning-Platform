@@ -48,6 +48,12 @@ const Courses = ({pageName='Course Details'}) => {
                 onClick={(e) => setActiveSection('course-details')}
                 >Content</a>
               </li>
+              <li className={`me-4 pt-2 ${activeSection === 'course-reviews' ? 'li-active': ''}`}>
+                <a
+                className='text-decoration-none'
+                onClick={(e) => setActiveSection('course-reviews')}
+                >Reviews</a>
+              </li>
               <li className={`pt-2 ${activeSection === 'edit-course' ? 'li-active': ''}`}>
                 <a
                 className='text-decoration-none'
@@ -190,6 +196,55 @@ const Courses = ({pageName='Course Details'}) => {
                 </div>
 
               </div>
+
+              {/* Course Reviews */}
+
+              <div className={`tab-pane ${activeSection === 'course-reviews' ? 'active': ''}`}>
+                <div className="card">
+                  <div className="card-header pb-3">
+                    <h3 className="card-title textColor">Reviews Availables</h3>
+                  </div>
+                  <div className="card-body py-2">
+                    {/* Review */}
+                    <div className="timeline_item py-0 mb-4">
+                      <img className="tl_avatar" src={avatar} alt="Avatar" />
+                      <span className='d-flex justify-content-between'>
+                        <a href="" className='text-decoration-none font-16 hoverBlue'>Fahd El Attar</a>
+                        <small className="float-right text-right font-12 textColor">20-April-2019</small>
+                      </span>
+                      <div className="msg my-1 d-flex flex-column align-items-start">
+                        <p className='my-1 mb-3 font-14 textColor'>
+                          I'm speaking with myself, number one, because I have a very good brain and I've said a lot of things. I write the best placeholder text, and I'm the biggest developer on the web card she has is the Lorem card.
+                        </p>
+                        {/* <video src={Angry_Video} controls width='25%' className='mb-3'></video> */}
+                        <audio src={Angry_Video} controls width='25%' className='mb-3' style={{height: '3rem'}}></audio>
+                        <a href="" className="mr-20 textColor text-decoration-none text-center font-14 fw-light" >
+                          <i className="bi bi-heart text-pink me-1"></i> 12 Love
+                        </a>
+                      </div>
+                    </div>
+                    {/* Review */}
+                    <div className="timeline_item py-0 mb-4">
+                      <img className="tl_avatar" src={avatar} alt="Avatar" />
+                      <span className='d-flex justify-content-between'>
+                        <a href="" className='text-decoration-none font-16 hoverBlue'>Fahd El Attar</a>
+                        <small className="float-right text-right font-12 textColor">20-April-2019</small>
+                      </span>
+                      <div className="msg my-1 d-flex flex-column align-items-start">
+                        <p className='my-1 mb-3 font-14 textColor'>
+                          I'm speaking with myself, number one, because I have a very good brain and I've said a lot of things. I write the best placeholder text, and I'm the biggest developer on the web card she has is the Lorem card.
+                        </p>
+                        <video src={Angry_Video} controls width='27%' className='mb-3'></video>
+                        {/* <audio src={Angry_Video} controls width='25%' className='mb-3' style={{height: '3rem'}}></audio> */}
+                        <a href="" className="mr-20 textColor text-decoration-none text-center font-14 fw-light" >
+                          <i className="bi bi-heart text-pink me-1"></i> 12 Love
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Edit Course */}
 
               <div className={`tab-pane ${activeSection === 'edit-course' ? 'active': ''}`}>
