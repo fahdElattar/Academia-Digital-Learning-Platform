@@ -1,0 +1,47 @@
+.course-info {
+    border-top: 1px solid var(--softerGrey);
+}
+
+.course-info div p {
+    font-size: .9rem;
+    font-weight: 400;
+    color: var(--textClr);
+}
+
+.course-grey {
+    background-color: var(--lightGrey);
+}
+
+.course-content {
+    font-size: .9rem;
+    font-weight: 400;
+    color: var(--textClr);
+}
+
+.card-header h5 {
+    color: var(--textClr);
+}
+
+.textColor {
+    color: var(--textClr);
+}
+
+video {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px #21252957;
+}
+
+.labelCursor {
+    cursor: pointer;
+}
+
+.dltBtn {
+    background-color: var(--lightGrey);
+    border: 1px solid var(--softerGrey);
+    color: #DC3545;
+}
+
+.dltBtn:hover {
+    background-color: #DC3545;
+    color: #fff;
+}

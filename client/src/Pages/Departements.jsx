@@ -70,6 +70,74 @@ const Courses = ({pageName='Departements'}) => {
                 </div>
 
               </div>
+              <div className="col-xl-4 col-md-6 col-sm-12">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="card-status bg-primary"></div>
+                    <div className="mb-1">
+                      <h5 className="mb-0 departement-name">Computer Science</h5>
+                    </div>
+                    <div className="mb-0">
+                      <h5 className="mb-2 departement-label">Departement</h5>
+                      <span className='mt-0 departement-description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti fugit incidunt</span>
+                    </div>
+                  </div>
+                  <div className="card-footer p-3">
+                    <div className="d-flex align-items-center justify-content-between mt-auto">
+                      <div className="d-flex flex-row align-items-center">
+                        <i className="bi bi-collection-fill avatar avatar-md me-3 text-light bg-primary"></i>
+                        <div>
+                          <a href="" className='text-decoration-none'>Sectors</a>
+                          <small className="d-block text-muted">5 Availables</small>
+                        </div>
+                      </div>
+                      <div className="ml-auto text-muted float-end">
+                        <button type="button" className="btn btn-icon btn-sm">
+                          <i className="bi bi-pencil text-success"></i>
+                        </button>
+                        <button type="button" className="btn btn-icon btn-sm js-sweetalert">
+                          <i className="bi bi-trash text-danger"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div className="col-xl-4 col-md-6 col-sm-12">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="card-status bg-primary"></div>
+                    <div className="mb-1">
+                      <h5 className="mb-0 departement-name">Computer Science</h5>
+                    </div>
+                    <div className="mb-0">
+                      <h5 className="mb-2 departement-label">Departement</h5>
+                      <span className='mt-0 departement-description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti fugit incidunt</span>
+                    </div>
+                  </div>
+                  <div className="card-footer p-3">
+                    <div className="d-flex align-items-center justify-content-between mt-auto">
+                      <div className="d-flex flex-row align-items-center">
+                        <i className="bi bi-collection-fill avatar avatar-md me-3 text-light bg-primary"></i>
+                        <div>
+                          <a href="" className='text-decoration-none'>Sectors</a>
+                          <small className="d-block text-muted">5 Availables</small>
+                        </div>
+                      </div>
+                      <div className="ml-auto text-muted float-end">
+                        <button type="button" className="btn btn-icon btn-sm">
+                          <i className="bi bi-pencil text-success"></i>
+                        </button>
+                        <button type="button" className="btn btn-icon btn-sm js-sweetalert">
+                          <i className="bi bi-trash text-danger"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>

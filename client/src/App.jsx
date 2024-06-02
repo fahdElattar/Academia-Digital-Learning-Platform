@@ -4,6 +4,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Login from './Pages/Login'
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import Courses from './Pages/Courses'
+import CourseDetails from './Pages/CourseDetails'
 import Professors from './Pages/Professors'
 import Students from './Pages/Students'
 import Departements from './Pages/Departements'
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login />}/>
           <Route path='/courses' element={<Courses />}/>
+          <Route path='/courseDetails' element={<CourseDetails />}/>
           <Route path='/professors' element={<Professors />}/>
           <Route path='/students' element={<Students />}/>
           <Route path='/departements' element={<Departements />}/>

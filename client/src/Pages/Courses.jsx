@@ -62,6 +62,58 @@ const Courses = ({pageName='Courses'}) => {
                   </div>
                 </div>
               </div>
+              {/* Course */}
+              <div className="col-xl-4 col-lg-4 col-md-6">
+                <div className="card">
+                  <a href="#">
+                    <img className="card-img-top" src={Pc} alt="Course image" />
+                  </a>
+                  <div className="card-body d-flex flex-column px-4 pb-3">
+                    <h6 className='blueHover'><a href="" className='text-decoration-none'>PHP Development Course</a></h6>
+                    <p className="text-muted text-capitalize small-para">A full course on backend tech PHP Development!!!</p>
+                  </div>
+                  <div className="card-footer">
+                    <div className="d-flex align-items-center justify-content-between mt-auto">
+                      <div className="d-flex flex-row align-items-center">
+                        <img className="avatar avatar-md me-3" src={avatar} alt="avatar" />
+                        <div>
+                          <a href="" className='text-decoration-none'>Pro. Jane</a>
+                          <small className="d-block text-muted">Head OF Dept.</small>
+                        </div>
+                      </div>
+                      <div className="ml-auto text-muted float-end">
+                        <a href="" className="icon d-none d-md-inline-block ml-3"><i className="bi bi-heart mr-1"></i> 521</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Course */}
+              <div className="col-xl-4 col-lg-4 col-md-6">
+                <div className="card">
+                  <a href="#">
+                    <img className="card-img-top" src={Pc} alt="Course image" />
+                  </a>
+                  <div className="card-body d-flex flex-column px-4 pb-3">
+                    <h6 className='blueHover'><a href="" className='text-decoration-none'>PHP Development Course</a></h6>
+                    <p className="text-muted text-capitalize small-para">A full course on backend tech PHP Development!!!</p>
+                  </div>
+                  <div className="card-footer">
+                    <div className="d-flex align-items-center justify-content-between mt-auto">
+                      <div className="d-flex flex-row align-items-center">
+                        <img className="avatar avatar-md me-3" src={avatar} alt="avatar" />
+                        <div>
+                          <a href="" className='text-decoration-none'>Pro. Jane</a>
+                          <small className="d-block text-muted">Head OF Dept.</small>
+                        </div>
+                      </div>
+                      <div className="ml-auto text-muted float-end">
+                        <a href="" className="icon d-none d-md-inline-block ml-3"><i className="bi bi-heart mr-1"></i> 521</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

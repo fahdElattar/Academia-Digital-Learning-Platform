@@ -48,6 +48,45 @@ const Courses = ({pageName='Professors'}) => {
                   </div>
                 </div>
               </div>
+              {/* Professor */}
+              <div className="col-xl-3 col-lg-3 col-md-4">
+                <div className="card">
+                  <div className="card-body text-center professor">
+                    <img className="card-profile-img" src={avatar} alt="Profile" />
+                    <h5 className="mb-0">M. Essalih</h5>
+                    <span className="text-muted">Computer</span>
+                    <div className="text-muted">0657225684</div>
+                    <p className="mb-3 mt-1 text-muted">Artificiale Intelligence, Computer Science</p>
+                    <button className="btn btn-primary btn-sm mb-1">Read More</button>
+                  </div>
+                </div>
+              </div>
+              {/* Professor */}
+              <div className="col-xl-3 col-lg-3 col-md-4">
+                <div className="card">
+                  <div className="card-body text-center professor">
+                    <img className="card-profile-img" src={avatar} alt="Profile" />
+                    <h5 className="mb-0">M. Essalih</h5>
+                    <span className="text-muted">Computer</span>
+                    <div className="text-muted">0657225684</div>
+                    <p className="mb-3 mt-1 text-muted">Artificiale Intelligence, Computer Science</p>
+                    <button className="btn btn-primary btn-sm mb-1">Read More</button>
+                  </div>
+                </div>
+              </div>
+              {/* Professor */}
+              <div className="col-xl-3 col-lg-3 col-md-4">
+                <div className="card">
+                  <div className="card-body text-center professor">
+                    <img className="card-profile-img" src={avatar} alt="Profile" />
+                    <h5 className="mb-0">M. Essalih</h5>
+                    <span className="text-muted">Computer</span>
+                    <div className="text-muted">0657225684</div>
+                    <p className="mb-3 mt-1 text-muted">Artificiale Intelligence, Computer Science</p>
+                    <button className="btn btn-primary btn-sm mb-1">Read More</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

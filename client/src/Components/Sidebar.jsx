@@ -33,10 +33,10 @@ const Sidebar = () => {
         <div className="pagination">
           <ul className='links'>
             <li>
-              <a href="index.html" className='active'>University</a>
+              <a href="index.html" className='active'>General</a>
             </li>
             <li>
-              <a href="index.html">Admin</a>
+              <a href="index.html">My Space</a>
             </li>
           </ul>
         </div>
