@@ -7,13 +7,11 @@ import Angry_Video from '../assets/courses/angry.mp4'
 import Fear_Audio from '../assets/courses/fear.wav'
 
 const Courses = ({pageName='Course Details'}) => {
-    const [video, setVideo] = useState(true)
-    const [audio, setAudio] = useState(false)
+    const [video, setVideo] = useState(false)
+    const [audio, setAudio] = useState(true)
     const [courseText, setCourseText] = useState(false)
 
     const [departmentName, setDepartmentName] = useState('');
-    const [headOfDepartment, setHeadOfDepartment] = useState('');
-    const [numberOfStudents, setNumberOfStudents] = useState('');
     const [startDate, setStartDate] = useState('');
     const [brief, setBrief] = useState('');
 
@@ -192,7 +190,6 @@ const Courses = ({pageName='Course Details'}) => {
                 </div>
 
               </div>
-
               {/* Edit Course */}
 
               <div className={`tab-pane ${activeSection === 'edit-course' ? 'active': ''}`}>
@@ -325,7 +322,7 @@ const Courses = ({pageName='Course Details'}) => {
                           <label className="col-form-label font-14">Video/Audio :</label>
                           <label htmlFor="formReview" class="form-control labelCursor textColor">
                             <i className='bi bi-archive-fill me-3 textColor'></i>
-                            Choose a file for your course
+                            Choose a file for your review
                           </label>
                           <input className="form-control d-none" type="file" id="formReview" accept='video/*,audio/*'/>
                         </div>

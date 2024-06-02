@@ -10,9 +10,12 @@ const Navbar = () => {
         <button className='search-btn btn btn-outline-secondary px-3 py-2'>Search</button>
       </form>
       <div className="navbar-links">
-        {/* <div className="notifications me-4">
-          <i class="bi bi-bell-fill"></i>
-        </div> */}
+        <div className="notifications me-4">
+          <i class="bi bi-gear-fill font-16"></i>
+        </div>
+        <div className="notifications me-4">
+          <i class="bi bi-bell-fill font-16"></i>
+        </div>
         <div className="user d-flex pe-3 m-0">
           <img src={Person} alt="Profile Image" />
           <p className='text-center m-0 p-0'>Fahd El Attar</p>

@@ -45,3 +45,12 @@
     font-size: .9rem;
     font-weight: 300;
 }
+
+.notifications i {
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
+
+.notifications i:hover {
+    color: var(--blueHover);
+} 
