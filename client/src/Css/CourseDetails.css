@@ -45,3 +45,15 @@ video {
     background-color: #DC3545;
     color: #fff;
 }
+
+.modal {
+    transition: .4s ease-in-out;
+}
+
+.slide-in {
+    transform: translateY(100%);
+}
+
+.slide-out {
+    transform: translateY(0);
+}

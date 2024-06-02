@@ -1,6 +1,7 @@
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/js/bootstrap.bundle'
 import Login from './Pages/Login'
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import Courses from './Pages/Courses'

@@ -18,17 +18,14 @@ const Courses = ({pageName='Course Details'}) => {
     const [brief, setBrief] = useState('');
 
     const [activeSection, setActiveSection] = useState('course-details')
+
+
+    const [showModal, setShowModal] = useState(false);
+    const handleShow = () => setShowModal(true);
+    const handleClose = () => setShowModal(false);
   
     const handleSubmit = (e) => {
       e.preventDefault();
-      // Handle form submission logic here
-      console.log({
-        departmentName,
-        headOfDepartment,
-        numberOfStudents,
-        startDate,
-        brief,
-      });
     };
 
     return (
@@ -48,10 +45,10 @@ const Courses = ({pageName='Course Details'}) => {
           <div className="links">
             <ul className='list-unstyled d-flex flex-row'>
               <li className={`me-4 pt-2 ${activeSection === 'course-details' ? 'li-active': ''}`}>
-                <a 
+                <a
                 className='text-decoration-none'
                 onClick={(e) => setActiveSection('course-details')}
-                >List View</a>
+                >Content</a>
               </li>
               <li className={`pt-2 ${activeSection === 'edit-course' ? 'li-active': ''}`}>
                 <a
@@ -140,6 +137,9 @@ const Courses = ({pageName='Course Details'}) => {
                   {/* course content */}
 
                   <div className="col-xl-8 col-lg-7 col-md-12">
+
+                    {/* input course */}
+
                     <div className="card">
                       <div className="card-header pt-4 pb-2">
                         <h5 className="m-0">Course Content</h5>
@@ -175,6 +175,19 @@ const Courses = ({pageName='Course Details'}) => {
                       }
 
                     </div>
+
+                    {/* certificate */}
+
+                    <div className="card">
+                      <div className="card-header pt-4 pb-2">
+                        <h5 className="m-0">Receive Certificate</h5>
+                      </div>
+                      <div className="card-body course-content pt-1">
+                        <p className='mt-0 '>This course's certificate serves as a testament to your hard work and dedication throughout the program. However, before we can issue your certificate, we kindly request that you post a review of your experience. Your feedback is invaluable to us and helps future students make informed decisions.</p>
+                        <button className='btn btn-primary mb-1' onClick={handleShow}>Post Review</button>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
 
@@ -296,9 +309,43 @@ const Courses = ({pageName='Course Details'}) => {
               </div>
 
             </div>
+
+            {showModal && (
               
+              <div className="modal fade show d-block" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h5 className="modal-title textColor font-18" id="exampleModalLabel">My Review</h5>
+                      <button type="button" className="btn-close" onClick={handleClose} aria-label="Close"></button>
+                    </div>
+                    <div className="modal-body textColor py-2">
+                      <form>
+                        <div className="mb-2">
+                          <label className="col-form-label font-14">Video/Audio :</label>
+                          <label htmlFor="formReview" class="form-control labelCursor textColor">
+                            <i className='bi bi-archive-fill me-3 textColor'></i>
+                            Choose a file for your course
+                          </label>
+                          <input className="form-control d-none" type="file" id="formReview" accept='video/*,audio/*'/>
+                        </div>
+                        <div className="mb-3">
+                          <label htmlFor="message-text" className="col-form-label font-14">Description :</label>
+                          <textarea className="form-control" id="message-text" placeholder='Description'></textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div className="modal-footer">
+                      <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
+                      <button type="button" className="btn btn-primary">Send review</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
+            )}
 
+            {showModal && <div className="modal-backdrop fade show"></div>}
 
           </div>
         </div>
