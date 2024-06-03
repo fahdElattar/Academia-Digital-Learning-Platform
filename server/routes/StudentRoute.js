@@ -1,18 +1,18 @@
 const express = require('express');
-const StudentsModel = require('../models/StudentsModel');
+const StudentModel = require('../models/StudentModel');
 
 const router = express.Router();
 
 // Get all students
 router.get('/', (req, res) => {
-    StudentsModel.find({})
+    StudentModel.find({})
         .then(students => res.json(students))
         .catch(err => res.status(500).json({ error: err.message }));
 });
 
 // Insert a student
 router.post('/', (req, res) => {
-    StudentsModel.create(req.body)
+    StudentModel.create(req.body)
         .then(student => res.status(201).json({ message: 'Student added successfully', student }))
         .catch(err => res.status(400).json({ error: err.message }));
 });
@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
 // Get a single student by ID
 router.get('/:id', (req, res) => {
     const id = req.params.id;
-    StudentsModel.findById(id)
+    StudentModel.findById(id)
         .then(student => {
             if (!student) {
                 return res.status(404).json({ error: 'Student not found' });
@@ -33,7 +33,7 @@ router.get('/:id', (req, res) => {
 // Update a student by ID
 router.put('/:id', (req, res) => {
     const id = req.params.id;
-    StudentsModel.findByIdAndUpdate(id, req.body, { new: true })
+    StudentModel.findByIdAndUpdate(id, req.body, { new: true })
         .then(student => {
             if (!student) {
                 return res.status(404).json({ error: 'Student not found' });
@@ -46,7 +46,7 @@ router.put('/:id', (req, res) => {
 // Delete a student by ID
 router.delete('/:id', (req, res) => {
     const id = req.params.id;
-    StudentsModel.findByIdAndDelete(id)
+    StudentModel.findByIdAndDelete(id)
         .then(student => {
             if (!student) {
                 return res.status(404).json({ error: 'Student not found' });
