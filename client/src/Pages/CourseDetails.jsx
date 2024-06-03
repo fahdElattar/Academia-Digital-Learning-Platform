@@ -7,8 +7,8 @@ import Angry_Video from '../assets/courses/angry.mp4'
 import Fear_Audio from '../assets/courses/fear.wav'
 
 const Courses = ({pageName='Course Details'}) => {
-    const [video, setVideo] = useState(false)
-    const [audio, setAudio] = useState(true)
+    const [video, setVideo] = useState(true)
+    const [audio, setAudio] = useState(false)
     const [courseText, setCourseText] = useState(false)
 
     const [departmentName, setDepartmentName] = useState('');
