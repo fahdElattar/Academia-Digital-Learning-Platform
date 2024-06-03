@@ -81,6 +81,18 @@ const Sidebar = () => {
                 Contact
               </a>
             </li>
+            <li className='link'>
+              <Link to='/myCourses'>
+                <i className="bi bi-building-fill"></i>
+                My Courses
+              </Link>
+            </li>
+            <li className='link'>
+              <Link to='/myLikes'>
+                <i className="bi bi-star-fill"></i>
+                My Likes
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

@@ -177,3 +177,11 @@
 }
 
 /* resusable css */
+
+.textClr {
+  color: var(--textClr);
+}
+
+.blueHover:hover {
+  color: var(--blueHover);
+}
