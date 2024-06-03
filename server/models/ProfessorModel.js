@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const ProfessorSchema = new mongoose.Schema({
     last_name: {
         type: String,
-        required: true
+        required: true,
     },
     first_name: {
         type: String,
@@ -14,7 +14,8 @@ const ProfessorSchema = new mongoose.Schema({
         required: true
     },
     img_path: {
-        type: String
+        type: String,
+        required: true
     },
     email: {
         type: String,
@@ -25,6 +26,11 @@ const ProfessorSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 8
+    },
+    sector_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Sector',
+        required: true,
     }
 }, {
     timestamps: true
