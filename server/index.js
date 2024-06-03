@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const ProfessorRoute = require('./routes/ProfessorRoute');
+const SpecialtiesRoute = require('./routes/SpecialtyRoute');
 const StudentRoute = require('./routes/StudentRoute')
 const CourseRoute = require('./routes/CourseRoute')
 const DepartmentRoute = require('./routes/DepartmentRoute')
@@ -14,6 +15,9 @@ app.use(express.json());
 
 // Professors route
 app.use('/professors', ProfessorRoute);
+
+// Specialties route
+app.use('/specialties', SpecialtiesRoute);
 
 // Students Route
 app.use('/students', StudentRoute)

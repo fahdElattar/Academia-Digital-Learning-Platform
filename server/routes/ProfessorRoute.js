@@ -1,13 +1,15 @@
 const express = require('express');
 const Professor = require('../models/ProfessorModel');
 const Sector = require('../models/SectorModel');
+const Specialty = require('../models/SpecialtyModel');
 
 const router = express.Router();
 
 // Get all professors
 router.get('/', (req, res) => {
     Professor.find({})
-        .populate('sector_id') // Populating sector details
+        .populate('sector_id')
+        .populate('specialty_id')
         .then(professors => res.json(professors))
         .catch(err => res.status(500).json({ error: err.message }));
 });
@@ -19,8 +21,15 @@ router.post('/', (req, res) => {
             if (!sector) {
                 return res.status(404).json({ error: 'Sector not found' });
             }
-            Professor.create(req.body)
-                .then(professor => res.status(201).json({ message: 'Professor added successfully', professor }))
+            Specialty.findById(req.body.specialty_id)
+                .then(specialty => {
+                    if (!specialty) {
+                        return res.status(404).json({ error: 'Specialty not found' });
+                    }
+                    Professor.create(req.body)
+                        .then(professor => res.status(201).json({ message: 'Professor added successfully', professor }))
+                        .catch(err => res.status(400).json({ error: err.message }));
+                })
                 .catch(err => res.status(400).json({ error: err.message }));
         })
         .catch(err => res.status(400).json({ error: err.message }));
@@ -30,7 +39,8 @@ router.post('/', (req, res) => {
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     Professor.findById(id)
-        .populate('sector_id') // Populating sector details
+        .populate('sector_id')
+        .populate('specialty_id')
         .then(professor => {
             if (!professor) {
                 return res.status(404).json({ error: 'Professor not found' });
@@ -48,12 +58,19 @@ router.put('/:id', (req, res) => {
             if (!sector) {
                 return res.status(404).json({ error: 'Sector not found' });
             }
-            Professor.findByIdAndUpdate(id, req.body, { new: true })
-                .then(professor => {
-                    if (!professor) {
-                        return res.status(404).json({ error: 'Professor not found' });
+            Specialty.findById(req.body.specialty_id)
+                .then(specialty => {
+                    if (!specialty) {
+                        return res.status(404).json({ error: 'Specialty not found' });
                     }
-                    res.json({ message: 'Professor updated successfully', professor });
+                    Professor.findByIdAndUpdate(id, req.body, { new: true })
+                        .then(professor => {
+                            if (!professor) {
+                                return res.status(404).json({ error: 'Professor not found' });
+                            }
+                            res.json({ message: 'Professor updated successfully', professor });
+                        })
+                        .catch(err => res.status(400).json({ error: err.message }));
                 })
                 .catch(err => res.status(400).json({ error: err.message }));
         })

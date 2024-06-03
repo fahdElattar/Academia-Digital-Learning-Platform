@@ -31,6 +31,11 @@ const ProfessorSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Sector',
         required: true,
+    },
+    specialty_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Specialty',
+        required: true,
     }
 }, {
     timestamps: true
