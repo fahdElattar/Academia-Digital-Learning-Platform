@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const ProfessorsRoute = require('./routes/ProfessorsRoute');
+const StudentsRoute = require('./routes/StudentsRoute')
 
 const app = express();
 
@@ -10,6 +11,9 @@ app.use(express.json());
 
 // Professors route
 app.use('/professors', ProfessorsRoute);
+
+// Students Route
+app.use('/students', StudentsRoute)
 
 // database connection
 mongoose.connect('mongodb://127.0.0.1:27017/academia')

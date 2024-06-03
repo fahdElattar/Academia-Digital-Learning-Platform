@@ -3,14 +3,14 @@ const mongoose = require('mongoose')
 const StudentsSchema = new mongoose.Schema({
     last_name : {
         type: String,
-        required: true
+        required: true,
     },
     first_name : {
         type: String,
         required: true
     },
     phone_number : {
-        type: String,
+        type: Number,
         required: true
     },
     img_path : {
@@ -19,10 +19,25 @@ const StudentsSchema = new mongoose.Schema({
     },
     email : {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password : {
         type: String,
+        required: true,
+        minlength: 8
+    },
+    number : {
+        type: Number,
+        required: true
+    },
+    sex : {
+        type: String,
+        required: true,
+        enum: ['Male', 'Female']
+    },
+    date_of_birth : {
+        type: Date,
         required: true
     }
 }, {

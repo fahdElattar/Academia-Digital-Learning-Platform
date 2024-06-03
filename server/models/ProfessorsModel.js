@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const ProfessorSchema = new mongoose.Schema({
     last_name: {
         type: String,
-        unique: true,
         required: true
     },
     first_name: {
