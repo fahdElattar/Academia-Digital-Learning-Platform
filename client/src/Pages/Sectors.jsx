@@ -10,27 +10,35 @@ const Courses = ({pageName='Sectors'}) => {
     // retreive departments
 
     const [sectors, setSectors] = useState([])
+    const [departments, setDepartments] = useState([])
 
     useEffect(() => {
       axios.get('http://localhost:3000/sectors')
-      .then(result => setSectors(result.data))
-      .catch(err => console.log('error getting result : ', err))
-    }, [])
+        .then(result => setSectors(result.data))
+        .catch(err => console.log('error getting sectors: ', err));
+    }, []);
+  
+    useEffect(() => {
+      axios.get('http://localhost:3000/departments')
+        .then(result => setDepartments(result.data))
+        .catch(err => console.log('error getting departments: ', err));
+    }, []);
 
     // Add a department
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [department_id, setDepartmentId] = useState('');
     
     const handleSubmit = (e) => {
       e.preventDefault();
 
-      if(!name && !description){
-        alert('Please enter both the name and the description!!')
+      if(!name && !description && !department_id){
+        alert('Please enter all inputs!!')
         return;
       }
       
-      axios.post('http://localhost:3000/sectors', {name, description})
+      axios.post('http://localhost:3000/sectors', {name, description, department_id})
       .then(res =>{
         alert('Input added successfully')
         window.location.reload()
@@ -114,7 +122,7 @@ const Courses = ({pageName='Sectors'}) => {
                                 <i className="bi bi-award-fill avatar avatar-md me-3 text-light bg-primary"></i>
                                 <div>
                                   <a href="" className='text-decoration-none'>Professors</a>
-                                  <small className="d-block text-muted">5 Availables</small>
+                                  <small className="d-block text-muted">{sector.professorCount} Availables</small>
                                 </div>
                               </div>
                               <div className="ml-auto text-muted float-end">
@@ -168,11 +176,17 @@ const Courses = ({pageName='Sectors'}) => {
                           </div>
                         </div>
                         <div className="col-sm-4">
-                          <select class="form-select font-14">
+                          <select 
+                            class="form-select font-14"
+                            value={department_id}
+                            onChange={(e) => setDepartmentId(e.target.value)}
+                            >
                             <option selected disabled>Select type</option>
-                            <option value="departement">departement</option>
-                            <option value="departement">departement</option>
-                            <option value="departement">departement</option>
+                            {departments.map(department => {
+                              return (
+                                <option key={department._id} value={department._id} className='text-capitalize'>{department.name}</option>
+                              )
+                            })}
                           </select>
                         </div>
                       </div>

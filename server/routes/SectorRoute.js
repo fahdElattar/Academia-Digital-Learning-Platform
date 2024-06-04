@@ -3,12 +3,34 @@ const Sector = require('../models/SectorModel');
 const Department = require('../models/DepartmentModel');
 const router = express.Router();
 
-// Get all sectors
-router.get('/', (req, res) => {
-    Sector.find({})
-        .populate('department_id')
-        .then(sectors => res.json(sectors))
-        .catch(err => res.status(500).json({ error: err.message }));
+// Get all sectors with professor count
+router.get('/', async (req, res) => {
+    try {
+        const sectors = await Sector.aggregate([
+            {
+                $lookup: {
+                    from: 'professors',
+                    localField: '_id',
+                    foreignField: 'sector_id',
+                    as: 'professors'
+                }
+            },
+            {
+                $addFields: {
+                    professorCount: { $size: '$professors' }
+                }
+            },
+            {
+                $project: {
+                    professors: 0
+                }
+            }
+        ]);
+
+        res.json(sectors);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // Insert a sector
