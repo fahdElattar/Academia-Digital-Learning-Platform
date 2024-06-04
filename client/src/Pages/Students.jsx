@@ -1,9 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import StarterPage from '../Components/StarterPage'
 import '../Css/Students.css'
 import avatar from '../assets/img/avatar1.jpg'
+import axios from 'axios'
 
 const Courses = ({pageName='Students'}) => {
+    const [students, setStudents] = useState([])
+
+    const [last_name, setLast_name] = useState('')
+    const [first_name, setFirst_name] = useState('')
+    const [phone_number, setPhone_number] = useState('')
+    const [img_path, setImg_path] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [number, setNumber] = useState('')
+    const [sex, setSex] = useState('')
+    const [date_of_birth, setDate_of_birth] = useState('')
+
+    useEffect(() => {
+      axios.get('http://localhost:3000/students')
+      .then(result => setStudents(result.data))
+      .catch(err => console.log('error getting students : ', err))
+    }, [])
+
     return (
       <StarterPage>
 
@@ -21,7 +40,7 @@ const Courses = ({pageName='Students'}) => {
           <div className="links">
             <ul className='list-unstyled d-flex flex-row'>
               <li className='li-active me-4 pt-2'>
-                <a href='' className='text-decoration-none a-active'>List View</a>
+                <a href='' className='text-decoration-none a-active'>Content</a>
               </li>
               <li className='pt-2'>
                 <a href='' className='text-decoration-none'>Add</a>
@@ -51,94 +70,34 @@ const Courses = ({pageName='Students'}) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td className='text-secondary'>16</td>
-                      <td>
-                        <img className="avatar" src={avatar} alt="Student" />
-                      </td>
-                      <td className='text-secondary'><span className="font-14">Fahd El Attar</span></td>
-                      <td className='text-secondary'>Fahdelattar13@gmail.com</td>
-                      <td className='text-secondary'>0638225678</td>
-                      <td className='text-secondary'>Male</td>
-                      <td className='text-secondary'>04 Jan, 2019</td>
-                      <td>
-                        <button type="button" className="btn btn-icon btn-sm">
-                          <i className="bi bi-eye-fill"></i>
-                        </button>
-                        <button type="button" className="btn btn-icon btn-sm">
-                          <i className="bi bi-pencil text-success"></i>
-                        </button>
-                        <button type="button" className="btn btn-icon btn-sm js-sweetalert">
-                          <i className="bi bi-trash text-danger"></i>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className='text-secondary'>16</td>
-                      <td>
-                        <img className="avatar" src={avatar} alt="Student" />
-                      </td>
-                      <td className='text-secondary'><span className="font-14">Fahd El Attar</span></td>
-                      <td className='text-secondary'>Fahdelattar13@gmail.com</td>
-                      <td className='text-secondary'>0638225678</td>
-                      <td className='text-secondary'>Male</td>
-                      <td className='text-secondary'>04 Jan, 2019</td>
-                      <td>
-                        <button type="button" className="btn btn-icon btn-sm">
-                          <i className="bi bi-eye-fill"></i>
-                        </button>
-                        <button type="button" className="btn btn-icon btn-sm">
-                          <i className="bi bi-pencil text-success"></i>
-                        </button>
-                        <button type="button" className="btn btn-icon btn-sm js-sweetalert">
-                          <i className="bi bi-trash text-danger"></i>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className='text-secondary'>16</td>
-                      <td>
-                        <img className="avatar" src={avatar} alt="Student" />
-                      </td>
-                      <td className='text-secondary'><span className="font-14">Fahd El Attar</span></td>
-                      <td className='text-secondary'>Fahdelattar13@gmail.com</td>
-                      <td className='text-secondary'>0638225678</td>
-                      <td className='text-secondary'>Male</td>
-                      <td className='text-secondary'>04 Jan, 2019</td>
-                      <td>
-                        <button type="button" className="btn btn-icon btn-sm">
-                          <i className="bi bi-eye-fill"></i>
-                        </button>
-                        <button type="button" className="btn btn-icon btn-sm">
-                          <i className="bi bi-pencil text-success"></i>
-                        </button>
-                        <button type="button" className="btn btn-icon btn-sm js-sweetalert">
-                          <i className="bi bi-trash text-danger"></i>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className='text-secondary'>16</td>
-                      <td>
-                        <img className="avatar" src={avatar} alt="Student" />
-                      </td>
-                      <td className='text-secondary'><span className="font-14">Fahd El Attar</span></td>
-                      <td className='text-secondary'>Fahdelattar13@gmail.com</td>
-                      <td className='text-secondary'>0638225678</td>
-                      <td className='text-secondary'>Male</td>
-                      <td className='text-secondary'>04 Jan, 2019</td>
-                      <td>
-                        <button type="button" className="btn btn-icon btn-sm">
-                          <i className="bi bi-eye-fill"></i>
-                        </button>
-                        <button type="button" className="btn btn-icon btn-sm">
-                          <i className="bi bi-pencil text-success"></i>
-                        </button>
-                        <button type="button" className="btn btn-icon btn-sm js-sweetalert">
-                          <i className="bi bi-trash text-danger"></i>
-                        </button>
-                      </td>
-                    </tr>
+                    {students.map(student => {
+                      // student's date of birth
+                      const formattedDateOfBirth = new Date(student.date_of_birth).toLocaleDateString();
+                      return (
+                        <tr>
+                          <td className='text-secondary'>{student.number}</td>
+                          <td>
+                            <img className="avatar" src={avatar} alt="Student" />
+                          </td>
+                          <td className='text-secondary'><span className="font-14 text-capitalize">{student.first_name && student.last_name}</span></td>
+                          <td className='text-secondary'>{student.email}</td>
+                          <td className='text-secondary'>{student.phone_number}</td>
+                          <td className='text-secondary'>{student.sex}</td>
+                          <td className='text-secondary'>{formattedDateOfBirth}</td>
+                          <td>
+                            <button type="button" className="btn btn-icon btn-sm">
+                              <i className="bi bi-eye-fill"></i>
+                            </button>
+                            <button type="button" className="btn btn-icon btn-sm">
+                              <i className="bi bi-pencil text-success"></i>
+                            </button>
+                            <button type="button" className="btn btn-icon btn-sm js-sweetalert">
+                              <i className="bi bi-trash text-danger"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
