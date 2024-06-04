@@ -4,10 +4,33 @@ const Specialty = require('../models/SpecialtyModel');
 const router = express.Router();
 
 // Get all specialties
-router.get('/', (req, res) => {
-    Specialty.find({})
-        .then(specialties => res.json(specialties))
-        .catch(err => res.status(500).json({ error: err.message }));
+router.get('/', async (req, res) => {
+    try {
+        const specialties = await Specialty.aggregate([
+            {
+                $lookup: {
+                    from: 'professors',
+                    localField: '_id',
+                    foreignField: 'specialty_id',
+                    as: 'professors'
+                }
+            },
+            {
+                $addFields: {
+                    professorCount: { $size: '$professors' }
+                }
+            },
+            {
+                $project: {
+                    professors: 0
+                }
+            }
+        ]);
+
+        res.json(specialties);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // Insert a specialty
