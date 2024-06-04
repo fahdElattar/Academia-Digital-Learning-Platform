@@ -1,15 +1,55 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import StarterPage from '../Components/StarterPage'
 import '../Css/Sectors.css'
+import axios from 'axios'
 
 const Courses = ({pageName='Sectors'}) => {
   
     const [activeSection, setActiveSection] = useState('sectors-list')
-    const [departmentName, setDepartmentName] = useState('');
+
+    // retreive departments
+
+    const [sectors, setSectors] = useState([])
+
+    useEffect(() => {
+      axios.get('http://localhost:3000/sectors')
+      .then(result => setSectors(result.data))
+      .catch(err => console.log('error getting result : ', err))
+    }, [])
+
+    // Add a department
+
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
     
     const handleSubmit = (e) => {
       e.preventDefault();
+
+      if(!name && !description){
+        alert('Please enter both the name and the description!!')
+        return;
+      }
+      
+      axios.post('http://localhost:3000/sectors', {name, description})
+      .then(res =>{
+        alert('Input added successfully')
+        window.location.reload()
+      })
+      .catch(err => {
+        alert('An Error accured whilst adding the input!!')
+        console.log(err)
+      })
+
     };
+
+    const handleDelete = (id) => {
+      axios.delete('http://localhost:3000/sectors/'+ id)
+      .then(window.location.reload())
+      .catch(err => {
+        alert('An Error accured whilst deleting!!')
+        console.log(err)
+      })
+    }
 
     return (
       <StarterPage>
@@ -54,40 +94,43 @@ const Courses = ({pageName='Sectors'}) => {
 
               <div className={`tab-pane ${activeSection === 'sectors-list' ? 'active': ''}`}>
                 <div className="row">
-                  {/* Sector */}
-                  <div className="col-xl-4 col-md-6 col-sm-12">
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="card-status bg-blue"></div>
-                        <div className="mb-1">
-                          <h5 className="mb-0 sectors-name">Computer Science</h5>
-                        </div>
-                        <div className="mb-0">
-                          <h5 className="mb-2 sectors-label">Sector</h5>
-                          <span className='mt-0 sectors-description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti fugit incidunt</span>
-                        </div>
-                      </div>
-                      <div className="card-footer p-3">
-                        <div className="d-flex align-items-center justify-content-between mt-auto">
-                          <div className="d-flex flex-row align-items-center">
-                            <i className="bi bi-award-fill avatar avatar-md me-3 text-light bg-primary"></i>
-                            <div>
-                              <a href="" className='text-decoration-none'>Professors</a>
-                              <small className="d-block text-muted">5 Availables</small>
+                  {sectors.map(sector => {
+                    return (
+                      <div className="col-xl-4 col-md-6 col-sm-12" key={sector._id}>
+                        <div className="card">
+                          <div className="card-body">
+                            <div className="card-status bg-blue"></div>
+                            <div className="mb-1">
+                              <h5 className="mb-0 sectors-name text-capitalize">{sector.name}</h5>
+                            </div>
+                            <div className="mb-0">
+                              <h5 className="mb-2 sectors-label">Sector</h5>
+                              <span className='mt-0 sectors-description'>{sector.description}</span>
                             </div>
                           </div>
-                          <div className="ml-auto text-muted float-end">
-                            <button type="button" className="btn btn-icon btn-sm">
-                              <i className="bi bi-pencil text-success"></i>
-                            </button>
-                            <button type="button" className="btn btn-icon btn-sm js-sweetalert">
-                              <i className="bi bi-trash text-danger"></i>
-                            </button>
+                          <div className="card-footer p-3">
+                            <div className="d-flex align-items-center justify-content-between mt-auto">
+                              <div className="d-flex flex-row align-items-center">
+                                <i className="bi bi-award-fill avatar avatar-md me-3 text-light bg-primary"></i>
+                                <div>
+                                  <a href="" className='text-decoration-none'>Professors</a>
+                                  <small className="d-block text-muted">5 Availables</small>
+                                </div>
+                              </div>
+                              <div className="ml-auto text-muted float-end">
+                                <button type="button" className="btn btn-icon btn-sm">
+                                  <i className="bi bi-pencil text-success"></i>
+                                </button>
+                                <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={(e) => handleDelete(sector._id)}>
+                                  <i className="bi bi-trash text-danger"></i>
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    )
+                  })}
                 </div>
               </div>
 
@@ -108,8 +151,8 @@ const Courses = ({pageName='Sectors'}) => {
                               className="form-control"
                               placeholder="Name"
                               autoComplete='off'
-                              value={departmentName}
-                              onChange={(e) => setDepartmentName(e.target.value)}
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
                             />
                           </div>
                         </div>
@@ -119,8 +162,8 @@ const Courses = ({pageName='Sectors'}) => {
                               type="text"
                               className="form-control"
                               placeholder="Description"
-                              value={departmentName}
-                              onChange={(e) => setDepartmentName(e.target.value)}
+                              value={description}
+                              onChange={(e) => setDescription(e.target.value)}
                             />
                           </div>
                         </div>
