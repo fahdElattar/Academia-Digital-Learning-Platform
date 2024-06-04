@@ -1,11 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import StarterPage from '../Components/StarterPage'
 import '../Css/Departements.css'
 import avatar from '../assets/img/avatar1.jpg'
+import axios from 'axios'
 
 const Courses = ({pageName='Departments'}) => {
   
     const [activeSection, setActiveSection] = useState('departments-list')
+    const [departments, setDepartments] = useState([])
+
+    useEffect(() => {
+      axios.get('http://localhost:3000/departments')
+      .then(result => setDepartments(result.data))
+      .catch(err => console.log('error getting departments : ', err))
+    }, [])
+
     const [departmentName, setDepartmentName] = useState('');
     
     const handleSubmit = (e) => {
@@ -55,41 +64,46 @@ const Courses = ({pageName='Departments'}) => {
 
               <div className={`tab-pane ${activeSection === 'departments-list' ? 'active': ''}`}>
                 <div className="row">
-                  {/* Departement */}
-                  <div className="col-xl-4 col-md-6 col-sm-12">
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="card-status bg-primary"></div>
-                        <div className="mb-1">
-                          <h5 className="mb-0 departement-name">Computer Science</h5>
-                        </div>
-                        <div className="mb-0">
-                          <h5 className="mb-2 departement-label">Departement</h5>
-                          <span className='mt-0 departement-description'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam deleniti fugit incidunt</span>
-                        </div>
-                      </div>
-                      <div className="card-footer p-3">
-                        <div className="d-flex align-items-center justify-content-between mt-auto">
-                          <div className="d-flex flex-row align-items-center">
-                            <i className="bi bi-collection-fill avatar avatar-md me-3 text-light bg-primary"></i>
-                            <div>
-                              <a href="" className='text-decoration-none'>Sectors</a>
-                              <small className="d-block text-muted">5 Availables</small>
+                  {departments.map(department => {
+                    return (
+
+                      <div className="col-xl-4 col-md-6 col-sm-12" key={department._id}>
+                        <div className="card">
+                          <div className="card-body">
+                            <div className="card-status bg-primary"></div>
+                            <div className="mb-1">
+                              <h5 className="mb-0 departement-name">{department.name}</h5>
+                            </div>
+                            <div className="mb-0">
+                              <h5 className="mb-2 departement-label">Departement</h5>
+                              <span className='mt-0 departement-description'>{department.description}</span>
                             </div>
                           </div>
-                          <div className="ml-auto text-muted float-end">
-                            <button type="button" className="btn btn-icon btn-sm">
-                              <i className="bi bi-pencil text-success"></i>
-                            </button>
-                            <button type="button" className="btn btn-icon btn-sm js-sweetalert">
-                              <i className="bi bi-trash text-danger"></i>
-                            </button>
+                          <div className="card-footer p-3">
+                            <div className="d-flex align-items-center justify-content-between mt-auto">
+                              <div className="d-flex flex-row align-items-center">
+                                <i className="bi bi-collection-fill avatar avatar-md me-3 text-light bg-primary"></i>
+                                <div>
+                                  <a href="" className='text-decoration-none'>Sectors</a>
+                                  <small className="d-block text-muted">{department.sectorCount} Availables</small>
+                                </div>
+                              </div>
+                              <div className="ml-auto text-muted float-end">
+                                <button type="button" className="btn btn-icon btn-sm">
+                                  <i className="bi bi-pencil text-success"></i>
+                                </button>
+                                <button type="button" className="btn btn-icon btn-sm js-sweetalert">
+                                  <i className="bi bi-trash text-danger"></i>
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
 
-                  </div>
+                      </div>
+
+                    )
+                  })}
                 </div>
               </div>
 

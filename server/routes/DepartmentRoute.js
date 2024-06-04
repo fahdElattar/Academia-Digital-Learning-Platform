@@ -3,11 +3,34 @@ const Department = require('../models/DepartmentModel');
 
 const router = express.Router();
 
-// Get all departments
-router.get('/', (req, res) => {
-    Department.find({})
-        .then(departments => res.json(departments))
-        .catch(err => res.status(500).json({ error: err.message }));
+// Get all departments with sector count
+router.get('/', async (req, res) => {
+    try {
+        const departments = await Department.aggregate([
+            {
+                $lookup: {
+                    from: 'sectors',
+                    localField: '_id',
+                    foreignField: 'department_id',
+                    as: 'sectors'
+                }
+            },
+            {
+                $addFields: {
+                    sectorCount: { $size: '$sectors' }
+                }
+            },
+            {
+                $project: {
+                    sectors: 0 // Optionally exclude the sectors array because i only need the count
+                }
+            }
+        ]);
+
+        res.json(departments);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // Insert a department

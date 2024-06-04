@@ -74,7 +74,7 @@ const Courses = ({pageName='Students'}) => {
                       // student's date of birth
                       const formattedDateOfBirth = new Date(student.date_of_birth).toLocaleDateString();
                       return (
-                        <tr>
+                        <tr key={student._id}>
                           <td className='text-secondary'>{student.number}</td>
                           <td>
                             <img className="avatar" src={avatar} alt="Student" />
