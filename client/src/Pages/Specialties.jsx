@@ -3,42 +3,39 @@ import StarterPage from '../Components/StarterPage'
 import '../Css/Sectors.css'
 import axios from 'axios'
 
-const Sectors = ({pageName='Sectors'}) => {
+const Specialties = ({pageName='Specialties'}) => {
   
-    const [activeSection, setActiveSection] = useState('sectors-list')
+    const [activeSection, setActiveSection] = useState('specialties-list')
 
     // retreive departments
 
-    const [sectors, setSectors] = useState([])
-    const [departments, setDepartments] = useState([])
+    const [specialties, setSpecialties] = useState([])
 
     useEffect(() => {
-      axios.get('http://localhost:3000/sectors')
-        .then(result => setSectors(result.data))
-        .catch(err => console.log('error getting sectors: ', err));
+      axios.get('http://localhost:3000/specialties')
+        .then(result => setSpecialties(result.data))
+        .catch(err => console.log('error getting specialties: ', err));
     }, []);
   
     useEffect(() => {
-      axios.get('http://localhost:3000/departments')
-        .then(result => setDepartments(result.data))
-        .catch(err => console.log('error getting departments: ', err));
+      axios.get('http://localhost:3000/specialties')
+        .then(result => setSpecialties(result.data))
+        .catch(err => console.log('error getting specialties: ', err));
     }, []);
 
     // Add a department
 
     const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [department_id, setDepartmentId] = useState('');
     
     const handleSubmit = (e) => {
       e.preventDefault();
 
-      if(!name && !description && !department_id){
+      if(!name){
         alert('Please enter all inputs!!')
         return;
       }
       
-      axios.post('http://localhost:3000/sectors', {name, description, department_id})
+      axios.post('http://localhost:3000/specialties', {name})
       .then(res =>{
         alert('Input added successfully')
         window.location.reload()
@@ -51,7 +48,7 @@ const Sectors = ({pageName='Sectors'}) => {
     };
 
     const handleDelete = (id) => {
-      axios.delete('http://localhost:3000/sectors/'+ id)
+      axios.delete('http://localhost:3000/specialties/'+ id)
       .then(window.location.reload())
       .catch(err => {
         alert('An Error accured whilst deleting!!')
@@ -75,16 +72,16 @@ const Sectors = ({pageName='Sectors'}) => {
           </div>
           <div className="links">
             <ul className='list-unstyled d-flex flex-row'>
-              <li className={`me-4 pt-2 ${activeSection === 'sectors-list' ? 'li-active': ''}`}>
+              <li className={`me-4 pt-2 ${activeSection === 'specialties-list' ? 'li-active': ''}`}>
                 <a
                 className='text-decoration-none'
-                onClick={(e) => setActiveSection('sectors-list')}
+                onClick={(e) => setActiveSection('specialties-list')}
                 >Content</a>
               </li>
-              <li className={`pt-2 ${activeSection === 'add-sector' ? 'li-active': ''}`}>
+              <li className={`pt-2 ${activeSection === 'add-specialty' ? 'li-active': ''}`}>
                 <a
                 className='text-decoration-none'
-                onClick={(e) => setActiveSection('add-sector')}
+                onClick={(e) => setActiveSection('add-specialty')}
                 >Add</a>
               </li>
             </ul>
@@ -100,20 +97,19 @@ const Sectors = ({pageName='Sectors'}) => {
               
               {/* sectors list */}
 
-              <div className={`tab-pane ${activeSection === 'sectors-list' ? 'active': ''}`}>
+              <div className={`tab-pane ${activeSection === 'specialties-list' ? 'active': ''}`}>
                 <div className="row">
-                  {sectors.map(sector => {
+                  {specialties.map(specialty => {
                     return (
-                      <div className="col-xl-4 col-md-6 col-sm-12" key={sector._id}>
+                      <div className="col-xl-4 col-md-6 col-sm-12" key={specialty._id}>
                         <div className="card">
                           <div className="card-body">
-                            <div className="card-status bg-blue"></div>
+                            <div className="card-status bg-primary"></div>
                             <div className="mb-1">
-                              <h5 className="mb-0 sectors-name text-capitalize">{sector.name}</h5>
+                              <h5 className="mb-0 sectors-name text-capitalize">{specialty.name}</h5>
                             </div>
                             <div className="mb-0">
-                              <h5 className="mb-2 sectors-label">Sector</h5>
-                              <span className='mt-0 sectors-description'>{sector.description}</span>
+                              <h5 className="mb-0 sectors-label">Specialty</h5>
                             </div>
                           </div>
                           <div className="card-footer p-3">
@@ -121,15 +117,15 @@ const Sectors = ({pageName='Sectors'}) => {
                               <div className="d-flex flex-row align-items-center">
                                 <i className="bi bi-award-fill avatar avatar-md me-3 text-light bg-primary"></i>
                                 <div>
-                                  <a href="" className='text-decoration-none'>Professors</a>
-                                  <small className="d-block text-muted">{sector.professorCount} Availables</small>
+                                  <a className='text-decoration-none text-primary'>Professors</a>
+                                  <small className="d-block text-muted">{specialty.professorCount} Availables</small>
                                 </div>
                               </div>
                               <div className="ml-auto text-muted float-end">
                                 <button type="button" className="btn btn-icon btn-sm">
                                   <i className="bi bi-pencil text-success"></i>
                                 </button>
-                                <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={(e) => handleDelete(sector._id)}>
+                                <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={(e) => handleDelete(specialty._id)}>
                                   <i className="bi bi-trash text-danger"></i>
                                 </button>
                               </div>
@@ -144,15 +140,15 @@ const Sectors = ({pageName='Sectors'}) => {
 
               {/* add sector */}
 
-              <div className={`tab-pane ${activeSection === 'add-sector' ? 'active': ''}`}>
+              <div className={`tab-pane ${activeSection === 'add-specialty' ? 'active': ''}`}>
                 <div className="card">
                   <div className="card-header">
-                    <h3 className="card-title textColor">Sector Basic Info</h3>
+                    <h3 className="card-title textColor">Specialty Basic Info</h3>
                   </div>
                   <div className="card-body pt-0">
                     <form onSubmit={handleSubmit}>
                       <div className="row mb-3">
-                        <div className="col-sm-4">
+                        <div className="col-sm-12">
                           <div className="form-group">
                             <input
                               type="text"
@@ -163,31 +159,6 @@ const Sectors = ({pageName='Sectors'}) => {
                               onChange={(e) => setName(e.target.value)}
                             />
                           </div>
-                        </div>
-                        <div className="col-sm-4">
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Description"
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-sm-4">
-                          <select 
-                            class="form-select font-14"
-                            value={department_id}
-                            onChange={(e) => setDepartmentId(e.target.value)}
-                            >
-                            <option selected disabled>Select type</option>
-                            {departments.map(department => {
-                              return (
-                                <option key={department._id} value={department._id} className='text-capitalize'>{department.name}</option>
-                              )
-                            })}
-                          </select>
                         </div>
                       </div>
                       <div className="row">
@@ -210,4 +181,4 @@ const Sectors = ({pageName='Sectors'}) => {
     )
   }
 
-export default Sectors
+export default Specialties

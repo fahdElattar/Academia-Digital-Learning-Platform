@@ -12,6 +12,7 @@ import Departements from './Pages/Departements'
 import Sectors from './Pages/Sectors'
 import MyCourses from './Pages/MyCourses';
 import MyLikes from './Pages/MyLikes';
+import Specialties from './Pages/Specialties';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
           <Route path='/sectors' element={<Sectors />}/>
           <Route path='/myCourses' element={<MyCourses />}/>
           <Route path='/myLikes' element={<MyLikes />}/>
+          <Route path='/specialties' element={<Specialties />}/>
         </Routes>
       </BrowserRouter>
     </div>

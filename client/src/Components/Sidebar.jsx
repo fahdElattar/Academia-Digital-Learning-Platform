@@ -66,6 +66,12 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className='link'>
+            <Link to='/specialties'>
+              <i className="bi bi-check-square-fill"></i>
+              Specialties
+            </Link>
+          </li>
+          <li className='link'>
             <Link to='/departements'>
               <i className="bi bi-building-fill"></i>
               Departments
