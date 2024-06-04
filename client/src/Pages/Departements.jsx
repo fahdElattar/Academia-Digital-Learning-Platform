@@ -37,11 +37,20 @@ const Courses = ({pageName='Departments'}) => {
         window.location.reload()
       })
       .catch(err => {
-        // alert('An Error accured whilst adding the department!!')
+        alert('An Error accured whilst adding the department!!')
         console.log(err)
       })
 
     };
+
+    const handleDelete = (id) => {
+      axios.delete('http://localhost:3000/departments/'+ id)
+      .then(window.location.reload())
+      .catch(err => {
+        alert('An Error accured whilst deleting the department!!')
+        console.log(err)
+      })
+    }
 
     return (
       <StarterPage>
@@ -114,7 +123,7 @@ const Courses = ({pageName='Departments'}) => {
                                 <button type="button" className="btn btn-icon btn-sm">
                                   <i className="bi bi-pencil text-success"></i>
                                 </button>
-                                <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={handleDelete}>
+                                <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={(e) => handleDelete(department._id)}>
                                   <i className="bi bi-trash text-danger"></i>
                                 </button>
                               </div>
