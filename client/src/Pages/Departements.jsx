@@ -7,6 +7,9 @@ import axios from 'axios'
 const Courses = ({pageName='Departments'}) => {
   
     const [activeSection, setActiveSection] = useState('departments-list')
+
+    // retreive departments
+
     const [departments, setDepartments] = useState([])
 
     useEffect(() => {
@@ -15,10 +18,29 @@ const Courses = ({pageName='Departments'}) => {
       .catch(err => console.log('error getting departments : ', err))
     }, [])
 
-    const [departmentName, setDepartmentName] = useState('');
+    // Add a department
+
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
     
     const handleSubmit = (e) => {
       e.preventDefault();
+
+      if(!name && !description){
+        alert('Please enter both the department name and its description!!')
+        return;
+      }
+      
+      axios.post('http://localhost:3000/departments', {name, description})
+      .then(res =>{
+        alert('Department added successfully')
+        window.location.reload()
+      })
+      .catch(err => {
+        // alert('An Error accured whilst adding the department!!')
+        console.log(err)
+      })
+
     };
 
     return (
@@ -92,7 +114,7 @@ const Courses = ({pageName='Departments'}) => {
                                 <button type="button" className="btn btn-icon btn-sm">
                                   <i className="bi bi-pencil text-success"></i>
                                 </button>
-                                <button type="button" className="btn btn-icon btn-sm js-sweetalert">
+                                <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={handleDelete}>
                                   <i className="bi bi-trash text-danger"></i>
                                 </button>
                               </div>
@@ -124,8 +146,8 @@ const Courses = ({pageName='Departments'}) => {
                               className="form-control"
                               placeholder="Name"
                               autoComplete='off'
-                              value={departmentName}
-                              onChange={(e) => setDepartmentName(e.target.value)}
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
                             />
                           </div>
                         </div>
@@ -135,8 +157,8 @@ const Courses = ({pageName='Departments'}) => {
                               type="text"
                               className="form-control"
                               placeholder="Description"
-                              value={departmentName}
-                              onChange={(e) => setDepartmentName(e.target.value)}
+                              value={description}
+                              onChange={(e) => setDescription(e.target.value)}
                             />
                           </div>
                         </div>
@@ -144,7 +166,7 @@ const Courses = ({pageName='Departments'}) => {
                       <div className="row">
                         <div className="col-sm-12 mt-0">
                           <button type="submit" className="btn btn-primary me-2">Submit</button>
-                          <button type="button" className="btn btn-outline-secondary btn-default">Cancel</button>
+                          <button type="reset" className="btn btn-outline-secondary btn-default">Cancel</button>
                         </div>
                       </div>
                     </form>
