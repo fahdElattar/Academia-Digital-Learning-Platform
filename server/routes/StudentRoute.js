@@ -1,11 +1,13 @@
 const express = require('express');
 const StudentModel = require('../models/StudentModel');
+const Certificate = require('../models/CertificateModel');
 
 const router = express.Router();
 
 // Get all students
 router.get('/', (req, res) => {
     StudentModel.find({})
+        .populate('courses')
         .then(students => res.json(students))
         .catch(err => res.status(500).json({ error: err.message }));
 });
@@ -21,6 +23,7 @@ router.post('/', (req, res) => {
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     StudentModel.findById(id)
+        .populate('courses')
         .then(student => {
             if (!student) {
                 return res.status(404).json({ error: 'Student not found' });
@@ -54,6 +57,14 @@ router.delete('/:id', (req, res) => {
             res.json({ message: 'Student deleted successfully' });
         })
         .catch(err => res.status(400).json({ error: err.message }));
+});
+
+// Get certificates for a student
+router.get('/:id/certificates', (req, res) => {
+    Certificate.find({ student: req.params.id })
+        .populate('course')
+        .then(certificates => res.json(certificates))
+        .catch(err => res.status(500).json({ error: err.message }));
 });
 
 module.exports = router;

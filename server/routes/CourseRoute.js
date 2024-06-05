@@ -1,6 +1,8 @@
 const express = require('express');
 const Course = require('../models/CourseModel');
 const Professor = require('../models/ProfessorModel');
+const Student = require('../models/StudentModel');
+const Certificate = require('../models/CertificateModel');
 const multer = require('multer');
 const path = require('path');
 
@@ -22,6 +24,7 @@ const upload = multer({ storage: storage });
 router.get('/', (req, res) => {
     Course.find({})
         .populate('professor_id')
+        .populate('students')
         .then(courses => res.json(courses))
         .catch(err => res.status(500).json({ error: err.message }));
 });
@@ -55,6 +58,7 @@ router.get('/:id', (req, res) => {
     const id = req.params.id;
     Course.findById(id)
         .populate('professor_id')
+        .populate('students')
         .then(course => {
             if (!course) {
                 return res.status(404).json({ error: 'Course not found' });
@@ -103,6 +107,58 @@ router.delete('/:id', (req, res) => {
                 return res.status(404).json({ error: 'Course not found' });
             }
             res.json({ message: 'Course deleted successfully' });
+        })
+        .catch(err => res.status(400).json({ error: err.message }));
+});
+
+// Enroll a student in a course
+router.post('/:courseId/enroll', (req, res) => {
+    const { studentId } = req.body;
+    Course.findById(req.params.courseId)
+        .then(course => {
+            if (!course) {
+                return res.status(404).json({ error: 'Course not found' });
+            }
+            Student.findById(studentId)
+                .then(student => {
+                    if (!student) {
+                        return res.status(404).json({ error: 'Student not found' });
+                    }
+                    if (!course.students.includes(studentId)) {
+                        course.students.push(studentId);
+                        student.courses.push(req.params.courseId);
+                    }
+                    course.save();
+                    student.save();
+                    res.json({ message: 'Student enrolled successfully', course, student });
+                })
+                .catch(err => res.status(400).json({ error: err.message }));
+        })
+        .catch(err => res.status(400).json({ error: err.message }));
+});
+
+// Grant a certificate to a student for a course
+router.post('/:courseId/certificate', (req, res) => {
+    const { studentId } = req.body;
+    Course.findById(req.params.courseId)
+        .then(course => {
+            if (!course) {
+                return res.status(404).json({ error: 'Course not found' });
+            }
+            Student.findById(studentId)
+                .then(student => {
+                    if (!student) {
+                        return res.status(404).json({ error: 'Student not found' });
+                    }
+                    const certificate = new Certificate({
+                        course: req.params.courseId,
+                        student: studentId
+                    });
+                    certificate.save()
+                        .then(certificate => res.json({ message: 'Certificate granted successfully', certificate }))
+                        .catch(err => res.status(400).json({ error: err.message }));
+                })
+                .catch(err => res.status(400).json({ error: err.message }));
         })
         .catch(err => res.status(400).json({ error: err.message }));
 });

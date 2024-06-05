@@ -31,8 +31,7 @@ ChartJS.register(
   Filler
 );
 
-const CourseCharts = ({ pageName = 'Course Charts' }) => {
-  const [activeSection, setActiveSection] = useState('course-visualisation');
+const CourseCharts = () => {
 
   const generateFakeData = () => {
     const emotions = ['anger', 'fear', 'disgust', 'neutral', 'happy', 'sad', 'surprise'];

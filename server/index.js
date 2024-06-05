@@ -7,6 +7,7 @@ const StudentRoute = require('./routes/StudentRoute')
 const CourseRoute = require('./routes/CourseRoute')
 const DepartmentRoute = require('./routes/DepartmentRoute')
 const SectorRoute = require('./routes/SectorRoute')
+const ReviewRoute = require('./routes/ReviewRoute');
 
 const app = express();
 
@@ -30,6 +31,9 @@ app.use('/departments', DepartmentRoute)
 
 // Sectors Route
 app.use('/sectors', SectorRoute)
+
+// Sectors Route
+app.use('/reviews', ReviewRoute)
 
 // database connection
 mongoose.connect('mongodb://127.0.0.1:27017/academia')
