@@ -144,96 +144,65 @@ const CourseCharts = ({ pageName = 'Course Charts' }) => {
   };
 
   return (
-    <StarterPage>
-      <div className="page-head d-flex justify-content-between p-0">
-        <div className="name d-flex flex-column justify-content-lg-start pt-2">
-          <div className="top-name">
-            <h6 className="fw-bold mb-1">{pageName}</h6>
-          </div>
-          <div className="bottom-name mt-0">
-            <p className="text-uppercase mb-0 fw-light">
-              <span className="text-primary">ACADEMIA</span> / {pageName}
-            </p>
-          </div>
-        </div>
-        <div className="links">
-          <ul className="list-unstyled d-flex flex-row">
-            <li className={`me-4 pt-2 ${activeSection === 'course-visualisation' ? 'li-active' : ''}`}>
-              <a className="text-decoration-none" onClick={() => setActiveSection('course-visualisation')}>
-                Visualisation
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div className="section-body my-4 pb-2">
-        <div className="container-fluid p-0">
-          <div className="tab-content">
-            <div className={`tab-pane ${activeSection === 'course-visualisation' ? 'active' : ''}`}>
-              <div className="row">
-                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <Bar data={data} options={options} />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <Line data={data} options={options} />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <Pie data={data} options={options} />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <Doughnut data={data} options={options} />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <Scatter data={scatterData} options={options} />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <Bubble data={bubbleData} options={options} />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <Radar data={radarData} options={options} />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <PolarArea data={polarAreaData} options={options} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+    
+    <div className="row">
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
+            <Bar data={data} options={options} />
           </div>
         </div>
       </div>
-    </StarterPage>
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
+            <Line data={data} options={options} />
+          </div>
+        </div>
+      </div>
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
+            <Pie data={data} options={options} />
+          </div>
+        </div>
+      </div>
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
+            <Doughnut data={data} options={options} />
+          </div>
+        </div>
+      </div>
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
+            <Scatter data={scatterData} options={options} />
+          </div>
+        </div>
+      </div>
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
+            <Bubble data={bubbleData} options={options} />
+          </div>
+        </div>
+      </div>
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
+            <Radar data={radarData} options={options} />
+          </div>
+        </div>
+      </div>
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
+            <PolarArea data={polarAreaData} options={options} />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

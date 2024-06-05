@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import StarterPage from '../Components/StarterPage'
 import '../Css/CourseDetails.css'
-import Pc from '../assets/img/pc.jpg'
 import avatar from '../assets/img/avatar.jpg'
 import Angry_Video from '../assets/courses/angry.mp4'
-import Fear_Audio from '../assets/courses/fear.wav'
 import { Link, useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import CourseCharts from './CourseCharts'
 import axios from 'axios'
 
 const CourseDetails = ({pageName='Course Details'}) => {
@@ -454,6 +453,12 @@ const CourseDetails = ({pageName='Course Details'}) => {
                   </div>
                 </div>
 
+              </div>
+
+              {/* Course Charts Visualisation */}
+
+              <div className={`tab-pane ${activeSection === 'course-visualisation' ? 'active': ''}`}>
+                <CourseCharts />
               </div>
 
             </div>
