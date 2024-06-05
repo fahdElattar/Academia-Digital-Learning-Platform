@@ -1,7 +1,22 @@
 const express = require('express');
 const Course = require('../models/CourseModel');
+const Professor = require('../models/ProfessorModel');
+const multer = require('multer');
+const path = require('path');
 
 const router = express.Router();
+
+// Set up multer for file storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../client/uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // Get all courses
 router.get('/', (req, res) => {
@@ -12,9 +27,26 @@ router.get('/', (req, res) => {
 });
 
 // Insert a course
-router.post('/', (req, res) => {
-    Course.create(req.body)
-        .then(course => res.status(201).json({ message: 'Course added successfully', course }))
+router.post('/', upload.fields([{ name: 'img_path', maxCount: 1 }, { name: 'course_path', maxCount: 1 }]), (req, res) => {
+    Professor.findById(req.body.professor_id)
+        .then(professor => {
+            if (!professor) {
+                return res.status(404).json({ error: 'Professor not found' });
+            }
+            const courseData = {
+                name: req.body.name,
+                type: req.body.type,
+                img_path: req.files['img_path'] ? req.files['img_path'][0].filename : null,
+                course_path: req.files['course_path'] ? req.files['course_path'][0].filename : null,
+                description: req.body.description,
+                details: req.body.details,
+                date: req.body.date,
+                professor_id: req.body.professor_id
+            };
+            Course.create(courseData)
+                .then(course => res.status(201).json({ message: 'Course added successfully', course }))
+                .catch(err => res.status(400).json({ error: err.message }));
+        })
         .catch(err => res.status(400).json({ error: err.message }));
 });
 
@@ -22,7 +54,7 @@ router.post('/', (req, res) => {
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     Course.findById(id)
-        .populate('professor_id') // Populating professor details
+        .populate('professor_id')
         .then(course => {
             if (!course) {
                 return res.status(404).json({ error: 'Course not found' });
@@ -33,14 +65,31 @@ router.get('/:id', (req, res) => {
 });
 
 // Update a course by ID
-router.put('/:id', (req, res) => {
+router.put('/:id', upload.fields([{ name: 'img_path', maxCount: 1 }, { name: 'course_path', maxCount: 1 }]), (req, res) => {
     const id = req.params.id;
-    Course.findByIdAndUpdate(id, req.body, { new: true })
-        .then(course => {
-            if (!course) {
-                return res.status(404).json({ error: 'Course not found' });
+    Professor.findById(req.body.professor_id)
+        .then(professor => {
+            if (!professor) {
+                return res.status(404).json({ error: 'Professor not found' });
             }
-            res.json({ message: 'Course updated successfully', course });
+            const updateData = {
+                name: req.body.name,
+                type: req.body.type,
+                img_path: req.files['img_path'] ? req.files['img_path'][0].filename : req.body.img_path,
+                course_path: req.files['course_path'] ? req.files['course_path'][0].filename : req.body.course_path,
+                description: req.body.description,
+                details: req.body.details,
+                date: req.body.date,
+                professor_id: req.body.professor_id
+            };
+            Course.findByIdAndUpdate(id, updateData, { new: true })
+                .then(course => {
+                    if (!course) {
+                        return res.status(404).json({ error: 'Course not found' });
+                    }
+                    res.json({ message: 'Course updated successfully', course });
+                })
+                .catch(err => res.status(400).json({ error: err.message }));
         })
         .catch(err => res.status(400).json({ error: err.message }));
 });

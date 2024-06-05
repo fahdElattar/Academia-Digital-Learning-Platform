@@ -29,6 +29,10 @@ const CourseSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    likes: {
+        type: Number,
+        default: 0,
+    },
     professor_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Professor',
