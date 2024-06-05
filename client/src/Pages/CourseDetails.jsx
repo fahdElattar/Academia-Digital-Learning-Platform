@@ -47,7 +47,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
           setDescription(courseData.description);
           setDetails(courseData.details);
           const formattedCourseDate = new Date(courseData.date).toLocaleDateString();
-          setDate(formattedCourseDate);
+          setDate(courseData.date);
           setProfessor_id(courseData.professor_id);
     
           if (courseData.type === 'Video') {
@@ -85,7 +85,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
           window.location.reload();
         })
         .catch(err => {
-          alert('An error occurred while adding the input!!');
+          alert(err);
           console.log(err);
         });
     };
@@ -121,6 +121,12 @@ const CourseDetails = ({pageName='Course Details'}) => {
                 className='text-decoration-none'
                 onClick={(e) => setActiveSection('course-details')}
                 >Content</a>
+              </li>
+              <li className={`me-4 pt-2 ${activeSection === 'course-visualisation' ? 'li-active': ''}`}>
+                <a
+                className='text-decoration-none'
+                onClick={(e) => setActiveSection('course-visualisation')}
+                >Visualisation</a>
               </li>
               <li className={`me-4 pt-2 ${activeSection === 'course-reviews' ? 'li-active': ''}`}>
                 <a

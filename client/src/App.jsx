@@ -13,6 +13,7 @@ import Sectors from './Pages/Sectors'
 import MyCourses from './Pages/MyCourses';
 import MyLikes from './Pages/MyLikes';
 import Specialties from './Pages/Specialties';
+import CourseCharts from './Pages/CourseCharts';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path='/login' element={<Courses />}/>
           <Route path='/courses' element={<Courses />}/>
           <Route path='/courses/:id' element={<CourseDetails />}/>
+          <Route path='/courseCharts' element={<CourseCharts />}/>
           <Route path='/professors' element={<Professors />}/>
           <Route path='/students' element={<Students />}/>
           <Route path='/departements' element={<Departements />}/>

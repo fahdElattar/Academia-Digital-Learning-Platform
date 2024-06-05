@@ -1,0 +1,157 @@
+import React, { useState } from 'react';
+import StarterPage from '../Components/StarterPage';
+import '../Css/CourseDetails.css';
+import { Bar, Pie, Doughnut, Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  BarElement,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  ArcElement,
+  BarElement,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const CourseCharts = ({ pageName = 'Course Charts' }) => {
+  const [activeSection, setActiveSection] = useState('course-visualisation');
+
+  const generateFakeData = () => {
+    const emotions = ['anger', 'fear', 'disgust', 'neutral', 'happy', 'sad', 'surprise'];
+    const reviews = [];
+
+    for (let i = 0; i < 100; i++) {
+      const emotion = emotions[Math.floor(Math.random() * emotions.length)];
+      reviews.push({ studentId: i + 1, emotion });
+    }
+
+    return reviews;
+  };
+
+  const reviews = generateFakeData();
+
+  const aggregateData = (reviews) => {
+    const emotionCounts = {
+      anger: 0,
+      fear: 0,
+      disgust: 0,
+      neutral: 0,
+      happy: 0,
+      sad: 0,
+      surprise: 0,
+    };
+
+    reviews.forEach(review => {
+      emotionCounts[review.emotion]++;
+    });
+
+    return emotionCounts;
+  };
+
+  const emotionCounts = aggregateData(reviews);
+
+  const data = {
+    labels: ['Anger', 'Fear', 'Disgust', 'Neutral', 'Happy', 'Sad', 'Surprise'],
+    datasets: [
+      {
+        label: 'Number of Reviews',
+        data: Object.values(emotionCounts),
+        backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'],
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Emotion Distribution in Course Reviews',
+      },
+    },
+  };
+
+  return (
+    <StarterPage>
+      <div className="page-head d-flex justify-content-between p-0">
+        <div className="name d-flex flex-column justify-content-lg-start pt-2">
+          <div className="top-name">
+            <h6 className="fw-bold mb-1">{pageName}</h6>
+          </div>
+          <div className="bottom-name mt-0">
+            <p className="text-uppercase mb-0 fw-light">
+              <span className="text-primary">ACADEMIA</span> / {pageName}
+            </p>
+          </div>
+        </div>
+        <div className="links">
+          <ul className="list-unstyled d-flex flex-row">
+            <li className={`me-4 pt-2 ${activeSection === 'course-visualisation' ? 'li-active' : ''}`}>
+              <a className="text-decoration-none" onClick={() => setActiveSection('course-visualisation')}>
+                Visualisation
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="section-body my-4 pb-2">
+        <div className="container-fluid p-0">
+          <div className="tab-content">
+            <div className={`tab-pane ${activeSection === 'course-visualisation' ? 'active' : ''}`}>
+              <div className="row">
+                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <Doughnut data={data} options={options} />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <Pie data={data} options={options} />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <Line data={data} options={options} />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <Bar data={data} options={options} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </StarterPage>
+  );
+};
+
+export default CourseCharts;
