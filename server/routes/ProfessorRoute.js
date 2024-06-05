@@ -2,8 +2,22 @@ const express = require('express');
 const Professor = require('../models/ProfessorModel');
 const Sector = require('../models/SectorModel');
 const Specialty = require('../models/SpecialtyModel');
+const multer = require('multer');
+const path = require('path');
 
 const router = express.Router();
+
+// Set up multer for file storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../client/uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // Get all professors
 router.get('/', (req, res) => {
@@ -15,7 +29,7 @@ router.get('/', (req, res) => {
 });
 
 // Insert a professor
-router.post('/', (req, res) => {
+router.post('/', upload.single('img_path'), (req, res) => {
     Sector.findById(req.body.sector_id)
         .then(sector => {
             if (!sector) {
@@ -26,7 +40,17 @@ router.post('/', (req, res) => {
                     if (!specialty) {
                         return res.status(404).json({ error: 'Specialty not found' });
                     }
-                    Professor.create(req.body)
+                    const professorData = {
+                        last_name: req.body.last_name,
+                        first_name: req.body.first_name,
+                        phone_number: req.body.phone_number,
+                        img_path: req.file ? req.file.filename : null,  // Save only the filename
+                        email: req.body.email,
+                        password: req.body.password,
+                        sector_id: req.body.sector_id,
+                        specialty_id: req.body.specialty_id
+                    };
+                    Professor.create(professorData)
                         .then(professor => res.status(201).json({ message: 'Professor added successfully', professor }))
                         .catch(err => res.status(400).json({ error: err.message }));
                 })
@@ -51,7 +75,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Update a professor by ID
-router.put('/:id', (req, res) => {
+router.put('/:id', upload.single('img_path'), (req, res) => {
     const id = req.params.id;
     Sector.findById(req.body.sector_id)
         .then(sector => {
@@ -63,7 +87,17 @@ router.put('/:id', (req, res) => {
                     if (!specialty) {
                         return res.status(404).json({ error: 'Specialty not found' });
                     }
-                    Professor.findByIdAndUpdate(id, req.body, { new: true })
+                    const updateData = {
+                        last_name: req.body.last_name,
+                        first_name: req.body.first_name,
+                        phone_number: req.body.phone_number,
+                        img_path: req.file ? req.file.filename : req.body.img_path,  // Save only the filename
+                        email: req.body.email,
+                        password: req.body.password,
+                        sector_id: req.body.sector_id,
+                        specialty_id: req.body.specialty_id
+                    };
+                    Professor.findByIdAndUpdate(id, updateData, { new: true })
                         .then(professor => {
                             if (!professor) {
                                 return res.status(404).json({ error: 'Professor not found' });

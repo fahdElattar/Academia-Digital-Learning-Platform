@@ -8,9 +8,9 @@ const Sidebar = () => {
         <div className="top-area">
           <ul className='links'>
             <li className='link logo'><i className="bi bi-mortarboard-fill"></i></li>
-            <li className='link'><i class="bi bi-grid"></i></li>
-            <li className='link'><i class="bi bi-search"></i></li>
-            <li className='link'><i class="bi bi-gear"></i></li>
+            <li className='link'><i className="bi bi-grid"></i></li>
+            <li className='link'><i className="bi bi-search"></i></li>
+            <li className='link'><i className="bi bi-gear"></i></li>
           </ul>
         </div>
         <div className="down-area">
