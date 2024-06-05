@@ -120,7 +120,7 @@ const Professors = ({ pageName = 'Professors' }) => {
                   <div className="col-xl-3 col-lg-3 col-md-4" key={professor._id}>
                     <div className="card">
                       <div className="card-body text-center professor">
-                        <img className="card-profile-img" src={'../uploads/'+professor.img_path} alt="Profile" style={{width:"6rem", height:"6rem"}}/>
+                        <img className="card-profile-img" src={'../../uploads/'+professor.img_path} alt="Profile" style={{width:"6rem", height:"6rem"}}/>
                         <h5 className="mb-0 text-capitalize">{professor.last_name} {professor.first_name}</h5>
                         <span className="text-muted text-capitalize">{professor.specialty_id?.name}</span>
                         <div className="text-muted">{professor.phone_number}</div>

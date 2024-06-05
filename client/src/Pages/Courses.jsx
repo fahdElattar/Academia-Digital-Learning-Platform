@@ -107,7 +107,7 @@ const Courses = ({pageName='Courses'}) => {
                           <img className="card-img-top" src={'../../uploads/'+course.img_path} alt="Course image" style={{width: "100%", height: "12.4rem"}}/>
                         </Link>
                         <div className="card-body d-flex flex-column px-4 pb-3">
-                          <h6 className='blueHover'><Link to='/courseDetails' className='text-decoration-none text-capitalize'>{course.name}</Link></h6>
+                          <h6 className='blueHover'><Link to={'/courses/'+course._id} className='text-decoration-none text-capitalize'>{course.name}</Link></h6>
                           <p className="text-muted text-capitalize small-para">{course.description}</p>
                         </div>
                         <div className="card-footer">

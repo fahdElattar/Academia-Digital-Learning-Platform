@@ -1,30 +1,104 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import StarterPage from '../Components/StarterPage'
 import '../Css/CourseDetails.css'
 import Pc from '../assets/img/pc.jpg'
 import avatar from '../assets/img/avatar.jpg'
 import Angry_Video from '../assets/courses/angry.mp4'
 import Fear_Audio from '../assets/courses/fear.wav'
+import { Link, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
-const Courses = ({pageName='Course Details'}) => {
-    const [video, setVideo] = useState(true)
+const CourseDetails = ({pageName='Course Details'}) => {
+
+    const {id} = useParams()
+    const navigate = useNavigate()
+    const [video, setVideo] = useState(false)
     const [audio, setAudio] = useState(false)
     const [courseText, setCourseText] = useState(false)
 
-    const [departmentName, setDepartmentName] = useState('');
-    const [startDate, setStartDate] = useState('');
-    const [brief, setBrief] = useState('');
-
     const [activeSection, setActiveSection] = useState('course-details')
-
-
     const [showModal, setShowModal] = useState(false);
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
+
+    const [course, setCourse] = useState({})
   
-    const handleSubmit = (e) => {
+    const [name, setName] = useState('');
+    const [type, setType] = useState('');
+    const [img_path, setImg_path] = useState(null);
+    const [course_path, setCourse_path] = useState(null);
+    const [img_name, setImg_name] = useState('');
+    const [course_name, setCourse_name] = useState('');
+    const [description, setDescription] = useState('');
+    const [details, setDetails] = useState('');
+    const [date, setDate] = useState('');
+    const [professor_id, setProfessor_id] = useState('');
+
+    useEffect(() => {
+      axios.get('http://localhost:3000/courses/' + id)
+        .then(res => {
+          const courseData = res.data;
+          setCourse(courseData);
+          setName(courseData.name);
+          setType(courseData.type);
+          setImg_path(courseData.img_path);
+          setCourse_path(courseData.course_path);
+          setDescription(courseData.description);
+          setDetails(courseData.details);
+          const formattedCourseDate = new Date(courseData.date).toLocaleDateString();
+          setDate(formattedCourseDate);
+          setProfessor_id(courseData.professor_id);
+    
+          if (courseData.type === 'Video') {
+            setVideo(true);
+          } else if (courseData.type === 'Audio') {
+            setAudio(true);
+          } else {
+            setCourseText(true);
+          }
+        })
+        .catch(err => console.log(err));
+    }, [id]);
+  
+    const handleEditCourse = (e) => {
       e.preventDefault();
+  
+      if (!name || !type || !img_path || !course_path || !description || !details || !date || !professor_id) {
+        alert('Please enter all inputs!!');
+        return;
+      }
+  
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('type', type);
+      formData.append('img_path', img_path);
+      formData.append('course_path', course_path);
+      formData.append('description', description);
+      formData.append('details', details);
+      formData.append('date', date);
+      formData.append('professor_id', professor_id);
+  
+      axios.put('http://localhost:3000/courses/'+id, formData)
+        .then(res => {
+          alert('Input updated successfully');
+          window.location.reload();
+        })
+        .catch(err => {
+          alert('An error occurred while adding the input!!');
+          console.log(err);
+        });
     };
+
+    const handleDeleteCourse = (e) => {
+      e.preventDefault()
+      axios.delete('http://localhost:3000/courses/'+id)
+      .then(res => {
+        alert('Course deleted successfully')
+        navigate('/courses')
+      })
+      .catch(err => alert(err))
+    }
 
     return (
       <StarterPage>
@@ -81,12 +155,12 @@ const Courses = ({pageName='Course Details'}) => {
 
                   <div className="col-xl-4 col-lg-5 col-md-12">
                     <div className="card">
-                      <a href="#">
-                        <img className="card-img-top" src={Pc} alt="Course image" />
-                      </a>
+                      <Link to={`/courses/${course._id}`}>
+                        <img className="card-img-top" src={'../../uploads/'+course.img_path} alt="Course image" style={{width: "100%", height: "12.4rem"}} />
+                      </Link>
                       <div className="card-body d-flex flex-column px-4 pb-3">
-                        <h6 className='blueHover'><a href="" className='text-decoration-none'>PHP Development Course</a></h6>
-                        <p className="text-muted text-capitalize small-para">A full course on backend tech PHP Development!!!</p>
+                        <h6 className='blueHover'><a className='text-decoration-none text-capitalize'>{course.name}</a></h6>
+                        <p className="text-muted text-capitalize small-para">{course.description}</p>
                       </div>
 
                       {/* table card info */}
@@ -97,7 +171,7 @@ const Courses = ({pageName='Course Details'}) => {
                           <p className="tx-medium m-0">Date</p>
                         </div>
                         <div className="w-50">
-                          <p className="text-right mb-0">21st Aug 2019</p>
+                          <p className="text-right mb-0">{course.date}</p>
                         </div>
                       </div>
                       <div className="d-flex align-items-between justify-content-between px-2 py-3 course-info ">
@@ -106,7 +180,7 @@ const Courses = ({pageName='Course Details'}) => {
                           <p className="tx-medium m-0">Type</p>
                         </div>
                         <div className="w-50">
-                          <p className="text-right mb-0">Video</p>
+                          <p className="text-right mb-0">{course.type}</p>
                         </div>
                       </div>
                       <div className="d-flex align-items-between justify-content-between px-2 py-3 course-info course-grey">
@@ -124,14 +198,14 @@ const Courses = ({pageName='Course Details'}) => {
                       <div className="card-footer">
                         <div className="d-flex align-items-center justify-content-between mt-auto">
                           <div className="d-flex flex-row align-items-center">
-                            <img className="avatar avatar-md me-3" src={avatar} alt="avatar" />
+                              <img className="avatar avatar-md me-3" src={'../../uploads/'+course.professor_id?.img_path} alt="avatar" />
                             <div>
-                              <a href="" className='text-decoration-none'>Pro. Jane</a>
+                              <a href="" className='text-decoration-none'>Pro. {course.professor_id?.last_name}</a>
                               <small className="d-block text-muted">Head OF Dept.</small>
                             </div>
                           </div>
                           <div className="ml-auto text-muted float-end">
-                            <a href="" className="icon d-none d-md-inline-block ml-3"><i className="bi bi-heart mr-1"></i> 521</a>
+                            <a href="" className="icon d-none d-md-inline-block ml-3"><i className="bi bi-heart mr-1"></i> {course.likes}</a>
                           </div>
                         </div>
                       </div>
@@ -153,8 +227,8 @@ const Courses = ({pageName='Course Details'}) => {
 
                       { video && (
                           <div className="card-body pt-3 pb-4 course-content">
-                            <video src={Angry_Video} className='w-100' controls></video>
-                            <p className='mt-3'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                            <video src={'../../uploads/'+course.course_path} className='w-100' controls></video>
+                            <p className='mt-3'>{course.details}</p>
                           </div>
                         )
                       }
@@ -163,8 +237,8 @@ const Courses = ({pageName='Course Details'}) => {
 
                       { audio && (
                           <div className="card-body pt-3 pb-4 course-content">
-                            <audio src={Fear_Audio} className='w-100' controls></audio>
-                            <p className='mt-3'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                            <audio src={'../../uploads/'+course.course_path} className='w-100' controls></audio>
+                            <p className='mt-3'>{course.details}</p>
                           </div>
                         )
                       }
@@ -173,7 +247,7 @@ const Courses = ({pageName='Course Details'}) => {
 
                       {courseText && (
                           <div className="card-body pt-2 pb-4 course-content">
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                            <p>{course.details}</p>
                           </div>
                         )
                       }
@@ -235,7 +309,6 @@ const Courses = ({pageName='Course Details'}) => {
                           I'm speaking with myself, number one, because I have a very good brain and I've said a lot of things. I write the best placeholder text, and I'm the biggest developer on the web card she has is the Lorem card.
                         </p>
                         <video src={Angry_Video} controls width='27%' className='mb-3'></video>
-                        {/* <audio src={Angry_Video} controls width='25%' className='mb-3' style={{height: '3rem'}}></audio> */}
                         <a href="" className="mr-20 textColor text-decoration-none text-center font-14 fw-light" >
                           <i className="bi bi-heart text-pink me-1"></i> 12 Love
                         </a>
@@ -253,7 +326,7 @@ const Courses = ({pageName='Course Details'}) => {
                     <h3 className="card-title textColor">Course Basic Info</h3>
                   </div>
                   <div className="card-body pt-0">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleEditCourse}>
                       <div className="row mb-3">
                         <div className="col-sm-6">
                           <div className="form-group">
@@ -262,17 +335,17 @@ const Courses = ({pageName='Course Details'}) => {
                               className="form-control"
                               placeholder="Name"
                               autoComplete='off'
-                              value={departmentName}
-                              onChange={(e) => setDepartmentName(e.target.value)}
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
                             />
                           </div>
                         </div>
                         <div className="col-sm-6">
-                          <select class="form-select font-14">
-                            <option selected disabled>Select type</option>
-                            <option value="video">Video</option>
-                            <option value="audio">Audio</option>
-                            <option value="text">Text</option>
+                          <select className="form-control font-14" value={type} onChange={(e) => setType(e.target.value)}>
+                            <option value="" disabled>Select Type</option>
+                            <option value="Video">Video</option>
+                            <option value="Audio">Audio</option>
+                            <option value="Text">Text</option>
                           </select>
                         </div>
                       </div>
@@ -283,8 +356,8 @@ const Courses = ({pageName='Course Details'}) => {
                               type="text"
                               className="form-control"
                               placeholder="Description"
-                              value={departmentName}
-                              onChange={(e) => setDepartmentName(e.target.value)}
+                              value={description}
+                              onChange={(e) => setDescription(e.target.value)}
                             />
                           </div>
                         </div>
@@ -294,8 +367,8 @@ const Courses = ({pageName='Course Details'}) => {
                               type="date"
                               className="form-control"
                               placeholder="Department Start Date"
-                              value={startDate}
-                              onChange={(e) => setStartDate(e.target.value)}
+                              value={date}
+                              onChange={(e) => setDate(e.target.value)}
                             />
                           </div>
                         </div>
@@ -303,20 +376,38 @@ const Courses = ({pageName='Course Details'}) => {
                       <div className="row mb-3">
                         <div className="col-sm-6">
                           <div className="form-group">
-                            <label htmlFor="formImage" class="form-control labelCursor textColor">
+                            <label htmlFor="formImage" className="form-control labelCursor textColor">
                               <i className='bi bi-image me-3 textColor'></i>
-                              Choose an image for your course
+                              {img_path ? img_name : 'Choose an image for the course'}
                             </label>
-                            <input className="form-control d-none" type="file" accept='image/*' id="formImage" />
+                            <input
+                              className="form-control d-none"
+                              type="file"
+                              accept='image/*'
+                              id="formImage"
+                              onChange={(e) => {
+                                setImg_path(e.target.files[0]);
+                                setImg_name(e.target.files[0].name);
+                              }}
+                            />
                           </div>
                         </div>
                         <div className="col-sm-6">
                           <div className="form-group">
-                            <label htmlFor="formInput" class="form-control labelCursor textColor">
+                            <label htmlFor="formInput" className="form-control labelCursor textColor">
                               <i className='bi bi-archive-fill me-3 textColor'></i>
-                              Choose a file for your course
+                              {course_path ? course_name : 'Choose a file for the course'}
                             </label>
-                            <input className="form-control d-none" type="file" id="formInput" accept='video/*,audio/*'/>
+                            <input
+                              className="form-control d-none"
+                              type="file"
+                              accept='video/*,audio/*'
+                              id="formInput"
+                              onChange={(e) => {
+                                setCourse_path(e.target.files[0]);
+                                setCourse_name(e.target.files[0].name);
+                              }}
+                            />
                           </div>
                         </div>
                       </div>
@@ -327,8 +418,8 @@ const Courses = ({pageName='Course Details'}) => {
                               rows="4"
                               className="form-control no-resize"
                               placeholder="Details"
-                              value={brief}
-                              onChange={(e) => setBrief(e.target.value)}
+                              value={details}
+                              onChange={(e) => setDetails(e.target.value)}
                             ></textarea>
                           </div>
                         </div>
@@ -343,15 +434,14 @@ const Courses = ({pageName='Course Details'}) => {
 
                 <div className="card">
                   <div className="card-body py-4">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleDeleteCourse}>
                       <div className="d-flex justify-content-between align-items-center">
                         <div className="d-flex flex-column textColor">
                           <h6 className='mb-0 font-14 fw-semibold mb-1'>Delete this course</h6>
                           <p className='mb-0 font-12'>Once you delete your course, there is no going back. Please be certain.</p>
                         </div>
                         <div className="d-flex justify-content-end align-items-center">
-                          
-                          <button type="button" className="btn dltBtn fw-semibold">Delete this course</button>
+                          <button type="submit" className="btn dltBtn fw-semibold">Delete this course</button>
                         </div>
                       </div>
                     </form>
@@ -405,4 +495,4 @@ const Courses = ({pageName='Course Details'}) => {
     )
   }
 
-export default Courses
+export default CourseDetails
