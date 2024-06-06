@@ -32,6 +32,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
     const [description, setDescription] = useState('');
     const [details, setDetails] = useState('');
     const [date, setDate] = useState('');
+    const [formattedDate, setFormattedDate] = useState('');
     const [professor_id, setProfessor_id] = useState('');
 
     useEffect(() => {
@@ -42,12 +43,25 @@ const CourseDetails = ({pageName='Course Details'}) => {
           setName(courseData.name);
           setType(courseData.type);
           setImg_path(courseData.img_path);
+          setImg_name(courseData.img_path);
           setCourse_path(courseData.course_path);
+          setCourse_name(courseData.course_path);
           setDescription(courseData.description);
           setDetails(courseData.details);
           const formattedCourseDate = new Date(courseData.date).toLocaleDateString();
-          setDate(courseData.date);
+          setFormattedDate(formattedCourseDate);
           setProfessor_id(courseData.professor_id);
+
+          const date = new Date(courseData.date);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+    
+          setFormattedDate(`${year}-${month}-${day}`);
+
+          setDate(formattedDate)
+
+          console.log(courseData.date)
     
           if (courseData.type === 'Video') {
             setVideo(true);
@@ -176,7 +190,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
                           <p className="tx-medium m-0">Date</p>
                         </div>
                         <div className="w-50">
-                          <p className="text-right mb-0">{course.date}</p>
+                          <p className="text-right mb-0">{formattedDate}</p>
                         </div>
                       </div>
                       <div className="d-flex align-items-between justify-content-between px-2 py-3 course-info ">
