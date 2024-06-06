@@ -38,6 +38,7 @@ const CourseSchema = new mongoose.Schema({
         ref: 'Professor',
         required: true,
     },
+    // students regitered in the course
     students: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Student'

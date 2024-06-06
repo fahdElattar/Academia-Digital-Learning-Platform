@@ -10,19 +10,21 @@ import axios from 'axios'
 
 const CourseDetails = ({pageName='Course Details'}) => {
 
+    // Retreive the course id from the url params
     const {id} = useParams()
     const navigate = useNavigate()
+
+    // variables related to the sections to show and the review modal
     const [video, setVideo] = useState(false)
     const [audio, setAudio] = useState(false)
     const [courseText, setCourseText] = useState(false)
-
     const [activeSection, setActiveSection] = useState('course-details')
     const [showModal, setShowModal] = useState(false);
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
 
+    // variables related to the course
     const [course, setCourse] = useState({})
-  
     const [name, setName] = useState('');
     const [type, setType] = useState('');
     const [img_path, setImg_path] = useState(null);
@@ -31,13 +33,18 @@ const CourseDetails = ({pageName='Course Details'}) => {
     const [course_name, setCourse_name] = useState('');
     const [description, setDescription] = useState('');
     const [details, setDetails] = useState('');
+    const [courseLikes, setCourseLikes] = useState(0);
     const [date, setDate] = useState('');
     const [formattedDate, setFormattedDate] = useState('');
     const [professor_id, setProfessor_id] = useState('');
+    const [studentsCount, setStudentsCount] = useState(0);
 
+    // A hook to retrieve the course from the server side
     useEffect(() => {
       axios.get('http://localhost:3000/courses/' + id)
         .then(res => {
+          
+          // the course's basic information
           const courseData = res.data;
           setCourse(courseData);
           setName(courseData.name);
@@ -48,21 +55,19 @@ const CourseDetails = ({pageName='Course Details'}) => {
           setCourse_name(courseData.course_path);
           setDescription(courseData.description);
           setDetails(courseData.details);
-          const formattedCourseDate = new Date(courseData.date).toLocaleDateString();
-          setFormattedDate(formattedCourseDate);
+          setCourseLikes(courseData.likes);
           setProfessor_id(courseData.professor_id);
+          setStudentsCount(courseData.students?.length)
 
+          // to format the date i receive because it's deformed
           const date = new Date(courseData.date);
           const year = date.getFullYear();
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const day = String(date.getDate()).padStart(2, '0');
-    
           setFormattedDate(`${year}-${month}-${day}`);
-
           setDate(formattedDate)
-
-          console.log(courseData.date)
-    
+          
+          // which course content design i will show based on the course type
           if (courseData.type === 'Video') {
             setVideo(true);
           } else if (courseData.type === 'Audio') {
@@ -70,10 +75,12 @@ const CourseDetails = ({pageName='Course Details'}) => {
           } else {
             setCourseText(true);
           }
+
         })
         .catch(err => console.log(err));
     }, [id]);
   
+    // A function to edit the course and send it to the server side
     const handleEditCourse = (e) => {
       e.preventDefault();
   
@@ -103,6 +110,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
         });
     };
 
+    // A function to delete the course and send it to the server side
     const handleDeleteCourse = (e) => {
       e.preventDefault()
       axios.delete('http://localhost:3000/courses/'+id)
@@ -208,7 +216,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
                           <p className="tx-medium m-0">Students</p>
                         </div>
                         <div className="w-50">
-                          <p className="text-right mb-0">69 registered</p>
+                          <p className="text-right mb-0">{studentsCount} registered</p>
                         </div>
                       </div>
                       
@@ -224,7 +232,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
                             </div>
                           </div>
                           <div className="ml-auto text-muted float-end">
-                            <a href="" className="icon d-none d-md-inline-block ml-3"><i className="bi bi-heart mr-1"></i> {course.likes}</a>
+                            <a className="icon d-none d-md-inline-block ml-3"><i className="bi bi-heart mr-1"></i> {courseLikes}</a>
                           </div>
                         </div>
                       </div>
