@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const StudentSchema = new mongoose.Schema({
     last_name: {
@@ -29,7 +30,7 @@ const StudentSchema = new mongoose.Schema({
     },
     number: {
         type: Number,
-        required: true
+        unique: true
     },
     sex: {
         type: String,
@@ -47,5 +48,7 @@ const StudentSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+StudentSchema.plugin(AutoIncrement, { inc_field: 'number' });
 
 module.exports = mongoose.model('Student', StudentSchema);

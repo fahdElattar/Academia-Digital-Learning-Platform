@@ -5,12 +5,11 @@ import '../Css/Login.css'
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Add your form submission logic here
-    console.log({ email, password, rememberMe });
+    console.log({ email, password });
   };
   return (
     <div className="row w-100 vh-100 bg-softGrey">
@@ -21,7 +20,7 @@ const Login = () => {
               <Link className="header-brand" to="/">
                 <i className="bi bi-mortarboard-fill login-i"></i>
               </Link>
-              <div className="card-title mt-2 mb-4">Academia</div>
+              <div className="card-title mt-2 mb-4">LOGIN TO YOUR ACCOUNT</div>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="form-group mb-4">

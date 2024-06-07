@@ -1,8 +1,22 @@
 const express = require('express');
 const StudentModel = require('../models/StudentModel');
 const Certificate = require('../models/CertificateModel');
+const multer = require('multer');
+const path = require('path');
 
 const router = express.Router();
+
+// Set up multer for file storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../../client/uploads'));
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
 
 // Get all students
 router.get('/', (req, res) => {
@@ -13,8 +27,18 @@ router.get('/', (req, res) => {
 });
 
 // Insert a student
-router.post('/', (req, res) => {
-    StudentModel.create(req.body)
+router.post('/', upload.single('img_path'), (req, res) => {
+    const studentData = {
+        last_name: req.body.last_name,
+        first_name: req.body.first_name,
+        phone_number: req.body.phone_number,
+        img_path: req.file ? req.file.filename : null,
+        email: req.body.email,
+        password: req.body.password,
+        sex: req.body.sex,
+        date_of_birth: req.body.date_of_birth
+    };
+    StudentModel.create(studentData)
         .then(student => res.status(201).json({ message: 'Student added successfully', student }))
         .catch(err => res.status(400).json({ error: err.message }));
 });
@@ -34,9 +58,19 @@ router.get('/:id', (req, res) => {
 });
 
 // Update a student by ID
-router.put('/:id', (req, res) => {
+router.put('/:id', upload.single('img_path'), (req, res) => {
     const id = req.params.id;
-    StudentModel.findByIdAndUpdate(id, req.body, { new: true })
+    const updateData = {
+        last_name: req.body.last_name,
+        first_name: req.body.first_name,
+        phone_number: req.body.phone_number,
+        img_path: req.file ? req.file.filename : req.body.img_path,
+        email: req.body.email,
+        password: req.body.password,
+        sex: req.body.sex,
+        date_of_birth: req.body.date_of_birth
+    };
+    StudentModel.findByIdAndUpdate(id, updateData, { new: true })
         .then(student => {
             if (!student) {
                 return res.status(404).json({ error: 'Student not found' });
