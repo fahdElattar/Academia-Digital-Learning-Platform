@@ -11,10 +11,10 @@ const Navbar = () => {
       </form>
       <div className="navbar-links">
         <div className="notifications me-4">
-          <i class="bi bi-gear-fill font-16"></i>
+          <i className="bi bi-gear-fill font-16"></i>
         </div>
         <div className="notifications me-4">
-          <i class="bi bi-bell-fill font-16"></i>
+          <i className="bi bi-bell-fill font-16"></i>
         </div>
         <div className="user d-flex pe-3 m-0">
           <img src={Person} alt="Profile Image" />

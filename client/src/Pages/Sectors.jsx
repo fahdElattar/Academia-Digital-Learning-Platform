@@ -177,7 +177,7 @@ const Sectors = ({pageName='Sectors'}) => {
                         </div>
                         <div className="col-sm-4">
                           <select 
-                            class="form-select font-14"
+                            className="form-select font-14"
                             value={department_id}
                             onChange={(e) => setDepartmentId(e.target.value)}
                             >

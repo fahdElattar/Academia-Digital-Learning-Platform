@@ -1,0 +1,29 @@
+.bg-softGrey {
+    background-color: #E8E9E9;
+}
+
+.card-title {
+    color: #17a2b8;
+}
+
+.login-card {
+    width: 22rem;
+    padding: 45px 30px;
+    margin-bottom: 0;
+}
+
+.my-btn {
+    background: linear-gradient(145deg, #00b5ad, #17a2b8);
+    color: #fff;
+    border: none;
+    padding: .4rem 0;
+}
+
+.textClr {
+    color: var(--textClr);
+}
+
+.login-i {
+    font-size: 2.2rem;
+    transform: translateX(-180deg);
+}

@@ -19,6 +19,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// Get all reviews for a specific course by course ID
+router.get('/course/:courseId', (req, res) => {
+    const { courseId } = req.params;
+    Review.find({ course: courseId })
+        .populate('student')
+        .populate('course')
+        .then(reviews => {
+            if (reviews.length === 0) {
+                return res.status(404).json({ message: 'No reviews found for this course' });
+            }
+            res.json(reviews);
+        })
+        .catch(err => res.status(400).json({ error: err.message }));
+});
+
 // Get all reviews
 router.get('/', (req, res) => {
     Review.find({})

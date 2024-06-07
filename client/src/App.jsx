@@ -2,6 +2,7 @@ import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/js/bootstrap.bundle'
+import './assets/css/style.min.css'
 import Login from './Pages/Login'
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import Courses from './Pages/Courses'
@@ -22,7 +23,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Courses />}/>
-          <Route path='/login' element={<Courses />}/>
+          <Route path='/login' element={<Login />}/>
           <Route path='/courses' element={<Courses />}/>
           <Route path='/courses/:id' element={<CourseDetails />}/>
           <Route path='/courseCharts' element={<CourseCharts />}/>

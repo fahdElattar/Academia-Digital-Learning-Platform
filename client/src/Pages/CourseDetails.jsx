@@ -39,11 +39,19 @@ const CourseDetails = ({pageName='Course Details'}) => {
     const [professor_id, setProfessor_id] = useState('');
     const [studentsCount, setStudentsCount] = useState(0);
 
+    // variables related to the reviews of the course
+    const [reviews, setReviews] = useState('');
+    const [reviewFile, setReviewFile] = useState('');
+    const [reviewDescription, setReviewDescription] = useState('');
+    const [reviewStudent, setReviewStudent] = useState('665e2e70c70fcf20f04d4474');
+    const [reviewEmotion, setReviewEmotion] = useState('happy');
+    
+
     // A hook to retrieve the course from the server side
     useEffect(() => {
       axios.get('http://localhost:3000/courses/' + id)
         .then(res => {
-          
+
           // the course's basic information
           const courseData = res.data;
           setCourse(courseData);
@@ -79,6 +87,17 @@ const CourseDetails = ({pageName='Course Details'}) => {
         })
         .catch(err => console.log(err));
     }, [id]);
+
+    // A hook to retreive the reviews of the course
+    useEffect(() => {
+      axios.get('http://localhost:3000/reviews/course/'+id)
+      .then(res => {
+        setReviews(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }, [id])
   
     // A function to edit the course and send it to the server side
     const handleEditCourse = (e) => {
@@ -119,6 +138,29 @@ const CourseDetails = ({pageName='Course Details'}) => {
         navigate('/courses')
       })
       .catch(err => alert(err))
+    }
+
+    // A function to submit a review for the course
+    const handleSubmitReview = (e) => {
+      e.preventDefault()
+      if(!reviewFile || !reviewDescription || !reviewStudent || !reviewEmotion){
+        alert('Please enter all inputs')
+        return;
+      }
+
+      const formData = new FormData()
+      formData.append('student', reviewStudent)
+      formData.append('course', course._id)
+      formData.append('review_path', reviewFile)
+      formData.append('description', reviewDescription)
+      formData.append('emotion', reviewEmotion)
+
+      axios.post('http://localhost:3000/reviews', formData)
+      .then(res => {
+        console.log(res)
+        window.location.reload
+      })
+      .then(err => console.log(err))
     }
 
     return (
@@ -495,24 +537,37 @@ const CourseDetails = ({pageName='Course Details'}) => {
                       <button type="button" className="btn-close" onClick={handleClose} aria-label="Close"></button>
                     </div>
                     <div className="modal-body textColor py-2">
-                      <form>
+                      <form onSubmit={handleSubmitReview}>
                         <div className="mb-2">
                           <label className="col-form-label font-14">Video/Audio :</label>
-                          <label htmlFor="formReview" class="form-control labelCursor textColor">
+                          <label htmlFor="formReview" className="form-control labelCursor textColor">
                             <i className='bi bi-archive-fill me-3 textColor'></i>
                             Choose a file for your review
                           </label>
-                          <input className="form-control d-none" type="file" id="formReview" accept='video/*,audio/*'/>
+                          <input
+                            className="form-control d-none"
+                            type="file"
+                            id="formReview"
+                            accept='video/*,audio/*'
+                            value={reviewFile}
+                            onChange={(e) => setReviewFile(e.target.files[0])}
+                            />
                         </div>
                         <div className="mb-3">
                           <label htmlFor="message-text" className="col-form-label font-14">Description :</label>
-                          <textarea className="form-control" id="message-text" placeholder='Description'></textarea>
+                          <textarea
+                            className="form-control"
+                            id="message-text"
+                            placeholder='Description'
+                            value={reviewDescription}
+                            onChange={(e) => setReviewDescription(e.target.value)}
+                            />
                         </div>
                       </form>
                     </div>
                     <div className="modal-footer">
                       <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
-                      <button type="button" className="btn btn-primary">Send review</button>
+                      <button type="submit" className="btn btn-primary">Send review</button>
                     </div>
                   </div>
                 </div>
