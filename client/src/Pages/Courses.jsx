@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import StarterPage from '../Components/StarterPage';
 import '../Css/Courses.css';
-import Pc from '../assets/img/pc.jpg';
-import avatar from '../assets/img/avatar.jpg';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -10,10 +8,14 @@ const Courses = ({pageName='Courses'}) => {
   const [activeSection, setActiveSection] = useState('courses-list');
   const [courses, setCourses] = useState([]);
 
-  useEffect(() => {
-    axios.get('http://localhost:3000/courses')
+  const getCourses = () => {
+    axios.get('http://192.168.1.104:3000/courses')
       .then(res => setCourses(res.data))
       .catch(err => console.log(err));
+  }
+
+  useEffect(() => {
+    getCourses()
   }, []);
 
   const [name, setName] = useState('');
@@ -47,7 +49,7 @@ const Courses = ({pageName='Courses'}) => {
 
     console.log(formData);
 
-    axios.post('http://localhost:3000/courses', formData)
+    axios.post('http://192.168.1.104:3000/courses', formData)
       .then(res => {
         alert('Input added successfully');
         setName('');
@@ -59,8 +61,10 @@ const Courses = ({pageName='Courses'}) => {
         setDescription('');
         setDetails('');
         setDate('');
-        setProfessor_id('');
-        window.location.reload();
+        // setProfessor_id('');
+        getCourses()
+        setActiveSection('courses-list')
+        // window.location.reload();
       })
       .catch(err => {
         alert('An error occurred while adding the input!!');

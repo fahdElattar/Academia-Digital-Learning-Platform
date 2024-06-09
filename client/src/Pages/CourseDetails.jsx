@@ -93,6 +93,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
       axios.get('http://localhost:3000/reviews/course/'+id)
       .then(res => {
         setReviews(res.data)
+        console.log(reviews)
       })
       .catch(err => {
         console.log(err)

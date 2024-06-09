@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import StarterPage from '../Components/StarterPage'
 import '../Css/Sectors.css'
+import '../Css/Specialty.css'
+import SpecialtyImg from '../assets/img/specialty1.jpg'
 import axios from 'axios'
 
 const Specialties = ({pageName='Specialties'}) => {
@@ -101,23 +103,21 @@ const Specialties = ({pageName='Specialties'}) => {
                 <div className="row">
                   {specialties.map(specialty => {
                     return (
-                      <div className="col-xl-4 col-md-6 col-sm-12" key={specialty._id}>
+                      <div className="col-xl-3 col-lg-3 col-md-6" key={specialty._id}>
                         <div className="card">
-                          <div className="card-body">
-                            <div className="card-status bg-primary"></div>
-                            <div className="mb-1">
-                              <h5 className="mb-0 sectors-name text-capitalize">{specialty.name}</h5>
-                            </div>
-                            <div className="mb-0">
-                              <h5 className="mb-0 sectors-label">Specialty</h5>
-                            </div>
+                          <a className="">
+                            <img className="card-img-top" src={SpecialtyImg} alt="Course image"/>
+                          </a>
+                          <div className="card-body d-flex flex-column px-4 pb-2 pt-1">
+                            <h6 className='blueHover mb-0'><a className='text-decoration-none textClr text-capitalize'>{specialty.name}</a></h6>
+                            <p className="text-muted font-12 mt-1 mb-1">Specialty</p>
                           </div>
-                          <div className="card-footer p-3">
+                          <div className="card-footer">
                             <div className="d-flex align-items-center justify-content-between mt-auto">
                               <div className="d-flex flex-row align-items-center">
-                                <i className="bi bi-award-fill avatar avatar-md me-3 text-light bg-primary"></i>
-                                <div>
-                                  <a className='text-decoration-none text-primary'>Professors</a>
+                                <i className="bi bi-people-fill bg-light avatar avatar-md me-3" />
+                                <div className='font-14'>
+                                  <a className='text-decoration-none textClr'>Professors</a>
                                   <small className="d-block text-muted">{specialty.professorCount} Availables</small>
                                 </div>
                               </div>
@@ -133,6 +133,39 @@ const Specialties = ({pageName='Specialties'}) => {
                           </div>
                         </div>
                       </div>
+
+                      // <div className="col-xl-4 col-md-6 col-sm-12" key={specialty._id}>
+                      //   <div className="card">
+                      //     <div className="card-body">
+                      //       <div className="card-status bg-primary"></div>
+                      //       <div className="mb-1">
+                      //         <h5 className="mb-0 sectors-name text-capitalize">{specialty.name}</h5>
+                      //       </div>
+                      //       <div className="mb-0">
+                      //         <h5 className="mb-0 sectors-label">Specialty</h5>
+                      //       </div>
+                      //     </div>
+                      //     <div className="card-footer p-3">
+                      //       <div className="d-flex align-items-center justify-content-between mt-auto">
+                      //         <div className="d-flex flex-row align-items-center">
+                      //           <i className="bi bi-award-fill avatar avatar-md me-3 text-light bg-primary"></i>
+                      //           <div>
+                      //             <a className='text-decoration-none text-primary'>Professors</a>
+                      //             <small className="d-block text-muted">{specialty.professorCount} Availables</small>
+                      //           </div>
+                      //         </div>
+                      //         <div className="ml-auto text-muted float-end">
+                      //           <button type="button" className="btn btn-icon btn-sm">
+                      //             <i className="bi bi-pencil text-success"></i>
+                      //           </button>
+                      //           <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={(e) => handleDelete(specialty._id)}>
+                      //             <i className="bi bi-trash text-danger"></i>
+                      //           </button>
+                      //         </div>
+                      //       </div>
+                      //     </div>
+                      //   </div>
+                      // </div>
                     )
                   })}
                 </div>

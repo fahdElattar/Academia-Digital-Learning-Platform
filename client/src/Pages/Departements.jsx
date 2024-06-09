@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import StarterPage from '../Components/StarterPage'
 import '../Css/Departements.css'
-import avatar from '../assets/img/avatar1.jpg'
+import Department_img from '../assets/img/department.jpg'
 import axios from 'axios'
 
 const Courses = ({pageName='Departments'}) => {
@@ -97,25 +97,21 @@ const Courses = ({pageName='Departments'}) => {
                 <div className="row">
                   {departments.map(department => {
                     return (
-
-                      <div className="col-xl-4 col-md-6 col-sm-12" key={department._id}>
+                      <div className="col-xl-4 col-lg-4 col-sm-12" key={department._id}>
                         <div className="card">
-                          <div className="card-body">
-                            <div className="card-status bg-primary"></div>
-                            <div className="mb-1">
-                              <h5 className="mb-0 departement-name">{department.name}</h5>
-                            </div>
-                            <div className="mb-0">
-                              <h5 className="mb-2 departement-label">Departement</h5>
-                              <span className='mt-0 departement-description'>{department.description}</span>
-                            </div>
+                          <a className="d-flex justify-content-center">
+                            <img className="card-img-top department-img" src={Department_img} alt="department image" />
+                          </a>
+                          <div className="card-body d-flex flex-column px-4 pb-3 pt-3">
+                            <h6 className='blueHover text-capitalize'><a className='text-decoration-none textClr'>{department.name}</a></h6>
+                            <p className="text-muted text-capitalize font-14">{department.description}</p>
                           </div>
-                          <div className="card-footer p-3">
+                          <div className="card-footer">
                             <div className="d-flex align-items-center justify-content-between mt-auto">
                               <div className="d-flex flex-row align-items-center">
-                                <i className="bi bi-collection-fill avatar avatar-md me-3 text-light bg-primary"></i>
-                                <div>
-                                  <a href="" className='text-decoration-none'>Sectors</a>
+                                <i className="bi bi-collection-fill bg-light avatar avatar-md me-3" />
+                                <div className='font-14'>
+                                  <a className='text-decoration-none textClr'>Sectors</a>
                                   <small className="d-block text-muted">{department.sectorCount} Availables</small>
                                 </div>
                               </div>
@@ -130,7 +126,6 @@ const Courses = ({pageName='Departments'}) => {
                             </div>
                           </div>
                         </div>
-
                       </div>
 
                     )

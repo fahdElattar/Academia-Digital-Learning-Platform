@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import StarterPage from '../Components/StarterPage'
 import '../Css/Sectors.css'
 import axios from 'axios'
+import Department_img from '../assets/img/department4.jpg'
 
 const Sectors = ({pageName='Sectors'}) => {
   
@@ -104,24 +105,21 @@ const Sectors = ({pageName='Sectors'}) => {
                 <div className="row">
                   {sectors.map(sector => {
                     return (
-                      <div className="col-xl-4 col-md-6 col-sm-12" key={sector._id}>
+                      <div className="col-xl-4 col-lg-4 col-md-6" key={sector._id}>
                         <div className="card">
-                          <div className="card-body">
-                            <div className="card-status bg-blue"></div>
-                            <div className="mb-1">
-                              <h5 className="mb-0 sectors-name text-capitalize">{sector.name}</h5>
-                            </div>
-                            <div className="mb-0">
-                              <h5 className="mb-2 sectors-label">Sector</h5>
-                              <span className='mt-0 sectors-description'>{sector.description}</span>
-                            </div>
+                          <a className="">
+                            <img className="card-img-top" src={Department_img} alt="Course image" />
+                          </a>
+                          <div className="card-body d-flex flex-column px-4 pb-3 pt-1">
+                            <h6 className='blueHover'><a className='text-decoration-none text-capitalize textClr'>{sector.name}</a></h6>
+                            <p className="text-muted text-capitalize font-14">{sector.description}</p>
                           </div>
-                          <div className="card-footer p-3">
+                          <div className="card-footer">
                             <div className="d-flex align-items-center justify-content-between mt-auto">
                               <div className="d-flex flex-row align-items-center">
-                                <i className="bi bi-award-fill avatar avatar-md me-3 text-light bg-primary"></i>
-                                <div>
-                                  <a href="" className='text-decoration-none'>Professors</a>
+                                <i className="bi bi-people-fill bg-light avatar avatar-md me-3" />
+                                <div className='font-14'>
+                                  <a className='text-decoration-none textClr'>Professors</a>
                                   <small className="d-block text-muted">{sector.professorCount} Availables</small>
                                 </div>
                               </div>
