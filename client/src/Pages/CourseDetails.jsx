@@ -40,10 +40,11 @@ const CourseDetails = ({pageName='Course Details'}) => {
     const [studentsCount, setStudentsCount] = useState(0);
 
     // variables related to the reviews of the course
-    const [reviews, setReviews] = useState('');
-    const [reviewFile, setReviewFile] = useState('');
+    const [reviews, setReviews] = useState([]);
+    const [reviewFile, setReviewFile] = useState(null);
     const [reviewDescription, setReviewDescription] = useState('');
     const [reviewStudent, setReviewStudent] = useState('665e2e70c70fcf20f04d4474');
+    const [reviewType, setReviewType] = useState('');
     const [reviewEmotion, setReviewEmotion] = useState('happy');
     
 
@@ -92,13 +93,31 @@ const CourseDetails = ({pageName='Course Details'}) => {
     useEffect(() => {
       axios.get('http://localhost:3000/reviews/course/'+id)
       .then(res => {
-        setReviews(res.data)
-        console.log(reviews)
+        if(res){
+          setReviews(res.data)
+        }
       })
       .catch(err => {
-        console.log(err)
+        console.log('error retreiving reviews')
       })
     }, [id])
+
+    // a function to format date
+    const formatDateFunction = (d) => {
+      const date = new Date(d);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return (`${year}-${month}-${day}`);
+    }
+
+    const DetectReviewInputType = (input) => {
+      if (input.type.startsWith('video/')) {
+        setReviewType('video')
+      } else if (input.type.startsWith('audio/')) {
+        setReviewType('audio')
+      }
+    }
   
     // A function to edit the course and send it to the server side
     const handleEditCourse = (e) => {
@@ -143,25 +162,26 @@ const CourseDetails = ({pageName='Course Details'}) => {
 
     // A function to submit a review for the course
     const handleSubmitReview = (e) => {
-      e.preventDefault()
+      e.preventDefault();
       if(!reviewFile || !reviewDescription || !reviewStudent || !reviewEmotion){
-        alert('Please enter all inputs')
-        return;
+          alert('Please enter all inputs');
+          return;
       }
-
-      const formData = new FormData()
-      formData.append('student', reviewStudent)
-      formData.append('course', course._id)
-      formData.append('review_path', reviewFile)
-      formData.append('description', reviewDescription)
-      formData.append('emotion', reviewEmotion)
-
+  
+      const formData = new FormData();
+      formData.append('student', reviewStudent);
+      formData.append('course', id);
+      formData.append('review_path', reviewFile);
+      formData.append('description', reviewDescription);
+      formData.append('emotion', reviewEmotion);
+  
       axios.post('http://localhost:3000/reviews', formData)
       .then(res => {
-        console.log(res)
-        window.location.reload
+          setReviewFile(null)
+          setReviewDescription('')
+          alert('success');
       })
-      .then(err => console.log(err))
+      .catch(err => alert('error'));
     }
 
     return (
@@ -349,41 +369,28 @@ const CourseDetails = ({pageName='Course Details'}) => {
                     <h3 className="card-title textColor">Reviews Availables</h3>
                   </div>
                   <div className="card-body py-2">
-                    {/* Review */}
-                    <div className="timeline_item py-0 mb-4">
-                      <img className="tl_avatar" src={avatar} alt="Avatar" />
-                      <span className='d-flex justify-content-between'>
-                        <a href="" className='text-decoration-none font-16 hoverBlue'>Fahd El Attar</a>
-                        <small className="float-right text-right font-12 textColor">20-April-2019</small>
-                      </span>
-                      <div className="msg my-1 d-flex flex-column align-items-start">
-                        <p className='my-1 mb-3 font-14 textColor'>
-                          I'm speaking with myself, number one, because I have a very good brain and I've said a lot of things. I write the best placeholder text, and I'm the biggest developer on the web card she has is the Lorem card.
-                        </p>
-                        {/* <video src={Angry_Video} controls width='25%' className='mb-3'></video> */}
-                        <audio src={Angry_Video} controls width='25%' className='mb-3' style={{height: '3rem'}}></audio>
-                        <a href="" className="mr-20 textColor text-decoration-none text-center font-14 fw-light" >
-                          <i className="bi bi-heart text-pink me-1"></i> 12 Love
-                        </a>
-                      </div>
-                    </div>
-                    {/* Review */}
-                    <div className="timeline_item py-0 mb-4">
-                      <img className="tl_avatar" src={avatar} alt="Avatar" />
-                      <span className='d-flex justify-content-between'>
-                        <a href="" className='text-decoration-none font-16 hoverBlue'>Fahd El Attar</a>
-                        <small className="float-right text-right font-12 textColor">20-April-2019</small>
-                      </span>
-                      <div className="msg my-1 d-flex flex-column align-items-start">
-                        <p className='my-1 mb-3 font-14 textColor'>
-                          I'm speaking with myself, number one, because I have a very good brain and I've said a lot of things. I write the best placeholder text, and I'm the biggest developer on the web card she has is the Lorem card.
-                        </p>
-                        <video src={Angry_Video} controls width='27%' className='mb-3'></video>
-                        <a href="" className="mr-20 textColor text-decoration-none text-center font-14 fw-light" >
-                          <i className="bi bi-heart text-pink me-1"></i> 12 Love
-                        </a>
-                      </div>
-                    </div>
+                    {reviews.map(review => {
+                      return (
+                        <div className="timeline_item py-0 mb-4">
+                          <img className="tl_avatar" src={avatar} alt="Avatar" />
+                          <span className='d-flex justify-content-between'>
+                            <a href="" className='text-decoration-none font-16 hoverBlue'> {review.student?.first_name} {review.student?.last_name}</a>
+                            <small className="float-right text-right font-12 textColor"> {formatDateFunction(review.date)}</small>
+                          </span>
+                          <div className="msg my-1 d-flex flex-column align-items-start">
+                            <p className='my-1 mb-3 font-14 textColor'>{review.description}</p>
+                            {review.type === 'audio' ? (
+                              <audio src={'../../uploads/'+review.review_path} controls width='25%' className='mb-3' style={{height: '3rem'}}></audio>
+                            ) : (
+                              <video src={'../../uploads/'+review.review_path} controls width='27%' className='mb-3'></video>
+                            )}
+                            <a className="mr-20 textColor text-decoration-none text-center font-14 fw-light" >
+                              <i className="bi bi-heart text-pink me-1"></i> {review.likes} Love
+                            </a>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               </div>
@@ -529,30 +536,28 @@ const CourseDetails = ({pageName='Course Details'}) => {
             </div>
 
             {showModal && (
-              
               <div className="modal fade show d-block" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                   <div className="modal-content">
-                    <div className="modal-header">
-                      <h5 className="modal-title textColor font-18" id="exampleModalLabel">My Review</h5>
-                      <button type="button" className="btn-close" onClick={handleClose} aria-label="Close"></button>
-                    </div>
-                    <div className="modal-body textColor py-2">
-                      <form onSubmit={handleSubmitReview}>
+                    <form onSubmit={handleSubmitReview}>
+                      <div className="modal-header">
+                        <h5 className="modal-title textColor font-18" id="exampleModalLabel">My Review</h5>
+                        <button type="button" className="btn-close" onClick={handleClose} aria-label="Close"></button>
+                      </div>
+                      <div className="modal-body textColor py-2">
                         <div className="mb-2">
                           <label className="col-form-label font-14">Video/Audio :</label>
                           <label htmlFor="formReview" className="form-control labelCursor textColor">
                             <i className='bi bi-archive-fill me-3 textColor'></i>
-                            Choose a file for your review
+                            {reviewFile ? reviewFile.name : 'Choose a file for your review'}
                           </label>
                           <input
                             className="form-control d-none"
                             type="file"
                             id="formReview"
                             accept='video/*,audio/*'
-                            value={reviewFile}
                             onChange={(e) => setReviewFile(e.target.files[0])}
-                            />
+                          />
                         </div>
                         <div className="mb-3">
                           <label htmlFor="message-text" className="col-form-label font-14">Description :</label>
@@ -562,14 +567,14 @@ const CourseDetails = ({pageName='Course Details'}) => {
                             placeholder='Description'
                             value={reviewDescription}
                             onChange={(e) => setReviewDescription(e.target.value)}
-                            />
+                          />
                         </div>
-                      </form>
-                    </div>
-                    <div className="modal-footer">
-                      <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
-                      <button type="submit" className="btn btn-primary">Send review</button>
-                    </div>
+                      </div>
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
+                        <button type="submit" className="btn btn-primary">Send review</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

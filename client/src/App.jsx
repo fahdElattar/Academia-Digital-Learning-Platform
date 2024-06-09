@@ -16,6 +16,7 @@ import MyLikes from './Pages/MyLikes';
 import Specialties from './Pages/Specialties';
 import CourseCharts from './Pages/CourseCharts';
 import Register from './Pages/Register';
+import CourseTest from './Pages/CourseTest';
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
           <Route path='/login' element={<Login />}/>
           <Route path='/register' element={<Register />}/>
           <Route path='/courses' element={<Courses />}/>
+          <Route path='/coursetest' element={<CourseTest />}/>
           <Route path='/courses/:id' element={<CourseDetails />}/>
           <Route path='/courseCharts' element={<CourseCharts />}/>
           <Route path='/professors' element={<Professors />}/>

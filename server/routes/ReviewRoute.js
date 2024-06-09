@@ -1,7 +1,5 @@
 const express = require('express');
 const Review = require('../models/ReviewModel');
-const Student = require('../models/StudentModel');
-const Course = require('../models/CourseModel');
 const multer = require('multer');
 const path = require('path');
 
@@ -46,57 +44,41 @@ router.get('/', (req, res) => {
 // Insert a review
 router.post('/', upload.single('review_path'), (req, res) => {
     const { student, course, description, emotion } = req.body;
+
+    // Determine the file type based on MIME type
+    let type;
+    if (req.file) {
+        const mimeType = req.file.mimetype;
+        if (mimeType.startsWith('video/')) {
+            type = 'video';
+        } else if (mimeType.startsWith('audio/')) {
+            type = 'audio';
+        } else {
+            return res.status(400).json({ error: 'Unsupported file type' });
+        }
+    } else {
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
+
     const reviewData = {
         student,
         course,
-        review_path: req.file ? req.file.filename : null,
+        review_path: req.file.filename,
         description,
+        type,
         emotion,
         date: new Date(),
     };
-    
+
     Review.create(reviewData)
         .then(review => res.status(201).json({ message: 'Review added successfully', review }))
-        .catch(err => res.status(400).json({ error: err.message }));
+        .catch(err => {
+            console.error(err); // Log the error for debugging
+            res.status(400).json({ error: err.message });
+        });
 });
 
-// Get a single review by ID
-router.get('/:id', (req, res) => {
-    const id = req.params.id;
-    Review.findById(id)
-        .populate('student')
-        .populate('course')
-        .then(review => {
-            if (!review) {
-                return res.status(404).json({ error: 'Review not found' });
-            }
-            res.json(review);
-        })
-        .catch(err => res.status(400).json({ error: err.message }));
-});
-
-// Update a review by ID
-router.put('/:id', upload.single('review_path'), (req, res) => {
-    const id = req.params.id;
-    const { student, course, description, emotion } = req.body;
-    const updateData = {
-        student,
-        course,
-        review_path: req.file ? req.file.filename : req.body.review_path,
-        description,
-        emotion,
-        date: new Date(),
-    };
-
-    Review.findByIdAndUpdate(id, updateData, { new: true })
-        .then(review => {
-            if (!review) {
-                return res.status(404).json({ error: 'Review not found' });
-            }
-            res.json({ message: 'Review updated successfully', review });
-        })
-        .catch(err => res.status(400).json({ error: err.message }));
-});
+module.exports = router;
 
 // Delete a review by ID
 router.delete('/:id', (req, res) => {

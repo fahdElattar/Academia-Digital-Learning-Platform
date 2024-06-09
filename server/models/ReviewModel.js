@@ -21,16 +21,18 @@ const ReviewSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        required: true,
         default: Date.now,
     },
     description: {
         type: String,
         required: true,
     },
+    type: {
+        type: String,
+        enum: ['video', 'audio']
+    },
     emotion: {
         type: String,
-        required: true,
         enum: ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprised'],
     },
 }, {
