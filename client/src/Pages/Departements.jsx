@@ -12,10 +12,14 @@ const Courses = ({pageName='Departments'}) => {
 
     const [departments, setDepartments] = useState([])
 
-    useEffect(() => {
+    const getDepartments = () => {
       axios.get('http://localhost:3000/departments')
       .then(result => setDepartments(result.data))
       .catch(err => console.log('error getting departments : ', err))
+    } 
+
+    useEffect(() => {
+      getDepartments()
     }, [])
 
     // Add a department
@@ -34,21 +38,24 @@ const Courses = ({pageName='Departments'}) => {
       axios.post('http://localhost:3000/departments', {name, description})
       .then(res =>{
         alert('Department added successfully')
-        window.location.reload()
+        setName('')
+        setDescription('')
+        getDepartments()
+        setActiveSection('departments-list')
       })
       .catch(err => {
-        alert('An Error accured whilst adding the department!!')
-        console.log(err)
+        alert(err)
       })
 
     };
 
     const handleDelete = (id) => {
       axios.delete('http://localhost:3000/departments/'+ id)
-      .then(window.location.reload())
+      .then(res => {
+        getDepartments()
+      })
       .catch(err => {
-        alert('An Error accured whilst deleting the department!!')
-        console.log(err)
+        alert(err)
       })
     }
 

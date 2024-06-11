@@ -9,7 +9,7 @@ const Courses = ({pageName='Courses'}) => {
   const [courses, setCourses] = useState([]);
 
   const getCourses = () => {
-    axios.get('http://192.168.1.104:3000/courses')
+    axios.get('http://localhost:3000/courses')
       .then(res => setCourses(res.data))
       .catch(err => console.log(err));
   }
@@ -49,7 +49,7 @@ const Courses = ({pageName='Courses'}) => {
 
     console.log(formData);
 
-    axios.post('http://192.168.1.104:3000/courses', formData)
+    axios.post('http://localhost:3000/courses', formData)
       .then(res => {
         alert('Input added successfully');
         setName('');
@@ -64,7 +64,6 @@ const Courses = ({pageName='Courses'}) => {
         // setProfessor_id('');
         getCourses()
         setActiveSection('courses-list')
-        // window.location.reload();
       })
       .catch(err => {
         alert('An error occurred while adding the input!!');
@@ -119,12 +118,12 @@ const Courses = ({pageName='Courses'}) => {
                             <div className="d-flex flex-row align-items-center">
                               <img className="avatar avatar-md me-3" src={'../../uploads/'+course.professor_id?.img_path} alt="avatar" />
                               <div>
-                                <a href="" className='text-decoration-none'>Pro. {course.professor_id?.last_name}</a>
+                                <a className='text-decoration-none'>Pro. {course.professor_id?.last_name}</a>
                                 <small className="d-block text-muted">Head OF Dept.</small>
                               </div>
                             </div>
                             <div className="ml-auto text-muted float-end">
-                              <a href="" className="icon d-none d-md-inline-block ml-3"><i className="bi bi-heart mr-1"></i> {course.likes}</a>
+                              <a className="icon d-none d-md-inline-block ml-3"><i className="bi bi-heart mr-1"></i> {course.likes}</a>
                             </div>
                           </div>
                         </div>

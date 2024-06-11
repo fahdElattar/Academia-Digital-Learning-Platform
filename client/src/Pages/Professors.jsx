@@ -144,10 +144,10 @@ const Professors = ({ pageName = 'Professors' }) => {
                         <div className="text-muted">{professor.phone_number}</div>
                         <p className="mb-3 mt-1 text-muted text-capitalize">{professor.sector_id?.name}</p>
                         <div className="d-flex justify-content-center align-items-center mb-1">
-                          <button className="btn btn-outline-success btn-sm me-3">
+                          <button className="btn btn-outline-primary btn-sm me-2">
                             <i className='bi bi-pencil'></i>
                           </button>
-                          <button type='button' onClick={(e) => handleDelete(professor._id)} className="btn btn-outline-danger btn-sm">
+                          <button type='button' onClick={(e) => handleDelete(professor._id)} className="btn btn-outline-secondary btn-sm">
                             <i className='bi bi-trash'></i>
                           </button>
                         </div>

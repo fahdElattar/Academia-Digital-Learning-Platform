@@ -9,23 +9,21 @@ const Specialties = ({pageName='Specialties'}) => {
   
     const [activeSection, setActiveSection] = useState('specialties-list')
 
-    // retreive departments
+    // retreive specialties
 
     const [specialties, setSpecialties] = useState([])
 
-    useEffect(() => {
+    const getSpecialties = () => {
       axios.get('http://localhost:3000/specialties')
         .then(result => setSpecialties(result.data))
         .catch(err => console.log('error getting specialties: ', err));
-    }, []);
-  
+    }    
+
     useEffect(() => {
-      axios.get('http://localhost:3000/specialties')
-        .then(result => setSpecialties(result.data))
-        .catch(err => console.log('error getting specialties: ', err));
+      getSpecialties()
     }, []);
 
-    // Add a department
+    // Add a specialty
 
     const [name, setName] = useState('');
     
@@ -40,21 +38,23 @@ const Specialties = ({pageName='Specialties'}) => {
       axios.post('http://localhost:3000/specialties', {name})
       .then(res =>{
         alert('Input added successfully')
-        window.location.reload()
+        setName('')
+        getSpecialties()
+        setActiveSection('specialties-list')
       })
       .catch(err => {
-        alert('An Error accured whilst adding the input!!')
-        console.log(err)
+        alert(err)
       })
 
     };
 
     const handleDelete = (id) => {
       axios.delete('http://localhost:3000/specialties/'+ id)
-      .then(window.location.reload())
+      .then(res => 
+        getSpecialties()
+      )
       .catch(err => {
-        alert('An Error accured whilst deleting!!')
-        console.log(err)
+        alert(err)
       })
     }
 
