@@ -9,22 +9,28 @@ const Professors = ({ pageName = 'Professors' }) => {
   const [sectors, setSectors] = useState([]);
   const [specialties, setSpecialties] = useState([]);
 
-  useEffect(() => {
+  const getProfessors = () => {
     axios.get('http://localhost:3000/professors')
       .then(res => setProfessors(res.data))
       .catch(err => console.log(err));
-  }, []);
+  }
 
-  useEffect(() => {
+  const getSectors = () => {
     axios.get('http://localhost:3000/sectors')
       .then(res => setSectors(res.data))
       .catch(err => console.log(err));
-  }, []);
+  }
 
-  useEffect(() => {
+  const getSpecialties = () => {
     axios.get('http://localhost:3000/specialties')
       .then(res => setSpecialties(res.data))
       .catch(err => console.log(err));
+  }
+
+  useEffect(() => {
+    getProfessors()
+    getSectors()
+    getSpecialties()
   }, []);
 
   const [last_name, setLast_name] = useState('');
@@ -60,6 +66,7 @@ const Professors = ({ pageName = 'Professors' }) => {
     axios.post('http://localhost:3000/professors', formData)
       .then(res => {
         alert('Input added successfully');
+        // update the professor's inputs
         setLast_name('');
         setFirst_name('');
         setPhone_number('');
@@ -69,13 +76,24 @@ const Professors = ({ pageName = 'Professors' }) => {
         setPassword('');
         setSector_id('');
         setSpecialty_id('');
-        window.location.reload()
+        // get all professors
+        getProfessors()
+        // change the section from add-prof to prof-list
+        setActiveSection('prof-list')
       })
       .catch(err => {
         alert('An Error occurred whilst adding the input!!');
         console.log(err);
       });
   };
+
+  const handleDelete = (id) => {
+    axios.delete(`http://localhost:3000/professors/${id}`)
+    .then(res => {
+      getProfessors()
+    })
+    .catch(err => alert(err))
+  }
 
   return (
     <StarterPage>
@@ -125,7 +143,14 @@ const Professors = ({ pageName = 'Professors' }) => {
                         <span className="text-muted text-capitalize">{professor.specialty_id?.name}</span>
                         <div className="text-muted">{professor.phone_number}</div>
                         <p className="mb-3 mt-1 text-muted text-capitalize">{professor.sector_id?.name}</p>
-                        <button className="btn btn-primary btn-sm mb-2">Read More</button>
+                        <div className="d-flex justify-content-center align-items-center mb-1">
+                          <button className="btn btn-outline-success btn-sm me-3">
+                            <i className='bi bi-pencil'></i>
+                          </button>
+                          <button type='button' onClick={(e) => handleDelete(professor._id)} className="btn btn-outline-danger btn-sm">
+                            <i className='bi bi-trash'></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -37,16 +37,6 @@ const Courses = ({pageName='Students'}) => {
               <p className='text-uppercase mb-0 fw-light'><span className='text-primary'>ACADEMIA</span> / {pageName}</p>
             </div>
           </div>
-          <div className="links">
-            <ul className='list-unstyled d-flex flex-row'>
-              <li className='li-active me-4 pt-2'>
-                <a href='' className='text-decoration-none a-active'>Content</a>
-              </li>
-              <li className='pt-2'>
-                <a href='' className='text-decoration-none'>Add</a>
-              </li>
-            </ul>
-          </div>
         </div>
 
         {/* Page Body */}
@@ -77,9 +67,9 @@ const Courses = ({pageName='Students'}) => {
                         <tr key={student._id}>
                           <td className='text-secondary'>{student.number}</td>
                           <td>
-                            <img className="avatar" src={avatar} alt="Student" />
+                            <img className="avatar" src={'../../uploads/'+student.img_path} alt="Student" />
                           </td>
-                          <td className='text-secondary'><span className="font-14 text-capitalize">{student.first_name && student.last_name}</span></td>
+                          <td className='text-secondary'><span className="font-14 text-capitalize">{student.first_name} {student.last_name}</span></td>
                           <td className='text-secondary'>{student.email}</td>
                           <td className='text-secondary'>{student.phone_number}</td>
                           <td className='text-secondary'>{student.sex}</td>

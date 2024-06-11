@@ -82,7 +82,7 @@ const Sidebar = () => {
           <h6>EXTRA</h6>
           <ul className='links'>
             <li className='link'>
-              <a href='index'>
+              <a>
                 <i className="bi bi-chat-dots-fill"></i>
                 Contact
               </a>
@@ -91,12 +91,6 @@ const Sidebar = () => {
               <Link to='/myCourses'>
                 <i className="bi bi-building-fill"></i>
                 My Courses
-              </Link>
-            </li>
-            <li className='link'>
-              <Link to='/myLikes'>
-                <i className="bi bi-star-fill"></i>
-                My Likes
               </Link>
             </li>
           </ul>
