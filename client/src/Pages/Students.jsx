@@ -17,11 +17,23 @@ const Courses = ({pageName='Students'}) => {
     const [sex, setSex] = useState('')
     const [date_of_birth, setDate_of_birth] = useState('')
 
-    useEffect(() => {
+    const getStudents = () => {
       axios.get('http://localhost:3000/students')
       .then(result => setStudents(result.data))
       .catch(err => console.log('error getting students : ', err))
+    }
+
+    useEffect(() => {
+      getStudents()
     }, [])
+
+    const handleDelete = (id) => {
+      axios.delete(`http://localhost:3000/students/${id}`)
+      .then(res => {
+        getStudents()
+      })
+      .catch(err => alert(err))
+    }
 
     return (
       <StarterPage>
@@ -81,7 +93,7 @@ const Courses = ({pageName='Students'}) => {
                             <button type="button" className="btn btn-icon btn-sm">
                               <i className="bi bi-pencil text-success"></i>
                             </button>
-                            <button type="button" className="btn btn-icon btn-sm js-sweetalert">
+                            <button type="button" onClick={(e) => handleDelete(student._id)} className="btn btn-icon btn-sm js-sweetalert">
                               <i className="bi bi-trash text-danger"></i>
                             </button>
                           </td>
