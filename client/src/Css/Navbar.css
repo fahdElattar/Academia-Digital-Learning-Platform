@@ -1,5 +1,6 @@
 .navbar {
     border-bottom: 1px solid var(--softerGrey);
+    gap: 1rem 0;
 }
 
 .navbar form input {
@@ -53,4 +54,5 @@
 
 .notifications i:hover {
     color: var(--blueHover);
-} 
+}
+

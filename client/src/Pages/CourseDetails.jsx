@@ -60,8 +60,10 @@ const CourseDetails = ({pageName='Course Details'}) => {
           setType(courseData.type);
           setImg_path(courseData.img_path);
           setImg_name(courseData.img_path);
-          setCourse_path(courseData.course_path);
-          setCourse_name(courseData.course_path);
+          if(courseData.course_path){
+            setCourse_path(courseData.course_path );
+            setCourse_name(courseData.course_path);
+          }
           setDescription(courseData.description);
           setDetails(courseData.details);
           setCourseLikes(courseData.likes);
@@ -89,17 +91,19 @@ const CourseDetails = ({pageName='Course Details'}) => {
         .catch(err => console.log(err));
     }, [id]);
 
-    // A hook to retreive the reviews of the course
-    useEffect(() => {
+    const getReviews = (id) => {
       axios.get('http://localhost:3000/reviews/course/'+id)
       .then(res => {
-        if(res){
-          setReviews(res.data)
-        }
+        setReviews(res.data)
       })
       .catch(err => {
-        console.log('error retreiving reviews')
+        alert(err)
       })
+    }
+
+    // A hook to retreive the reviews of the course
+    useEffect(() => {
+      getReviews(id)
     }, [id])
 
     // a function to format date
@@ -109,14 +113,6 @@ const CourseDetails = ({pageName='Course Details'}) => {
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       return (`${year}-${month}-${day}`);
-    }
-
-    const DetectReviewInputType = (input) => {
-      if (input.type.startsWith('video/')) {
-        setReviewType('video')
-      } else if (input.type.startsWith('audio/')) {
-        setReviewType('audio')
-      }
     }
   
     // A function to edit the course and send it to the server side
@@ -157,7 +153,10 @@ const CourseDetails = ({pageName='Course Details'}) => {
         alert('Course deleted successfully')
         navigate('/courses')
       })
-      .catch(err => alert(err))
+      .catch(err => {
+        alert(err)
+        console.log(err)
+      })
     }
 
     // A function to submit a review for the course
@@ -179,6 +178,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
       .then(res => {
           setReviewFile(null)
           setReviewDescription('')
+          getReviews(id)
           alert('success');
       })
       .catch(err => alert('error'));
@@ -206,18 +206,22 @@ const CourseDetails = ({pageName='Course Details'}) => {
                 onClick={(e) => setActiveSection('course-details')}
                 >Content</a>
               </li>
-              <li className={`me-4 pt-2 ${activeSection === 'course-visualisation' ? 'li-active': ''}`}>
-                <a
-                className='text-decoration-none'
-                onClick={(e) => setActiveSection('course-visualisation')}
-                >Visualisation</a>
-              </li>
-              <li className={`me-4 pt-2 ${activeSection === 'course-reviews' ? 'li-active': ''}`}>
-                <a
-                className='text-decoration-none'
-                onClick={(e) => setActiveSection('course-reviews')}
-                >Reviews</a>
-              </li>
+              {reviews.length !== 0 && (
+                <li className={`me-4 pt-2 ${activeSection === 'course-visualisation' ? 'li-active': ''}`}>
+                  <a
+                  className='text-decoration-none'
+                  onClick={(e) => setActiveSection('course-visualisation')}
+                  >Visualisation</a>
+                </li>
+              )}
+              {reviews.length !== 0 && (
+                <li className={`me-4 pt-2 ${activeSection === 'course-reviews' ? 'li-active': ''}`}>
+                  <a
+                  className='text-decoration-none'
+                  onClick={(e) => setActiveSection('course-reviews')}
+                  >Reviews</a>
+                </li>
+              )}
               <li className={`pt-2 ${activeSection === 'edit-course' ? 'li-active': ''}`}>
                 <a
                 className='text-decoration-none'
@@ -368,30 +372,35 @@ const CourseDetails = ({pageName='Course Details'}) => {
                   <div className="card-header pb-3">
                     <h3 className="card-title textColor">Reviews Availables</h3>
                   </div>
-                  <div className="card-body py-2">
-                    {reviews.map(review => {
-                      return (
-                        <div className="timeline_item py-0 mb-4">
-                          <img className="tl_avatar" src={avatar} alt="Avatar" />
-                          <span className='d-flex justify-content-between'>
-                            <a href="" className='text-decoration-none font-16 hoverBlue'> {review.student?.first_name} {review.student?.last_name}</a>
-                            <small className="float-right text-right font-12 textColor"> {formatDateFunction(review.date)}</small>
-                          </span>
-                          <div className="msg my-1 d-flex flex-column align-items-start">
-                            <p className='my-1 mb-3 font-14 textColor'>{review.description}</p>
-                            {review.type === 'audio' ? (
-                              <audio src={'../../uploads/'+review.review_path} controls width='25%' className='mb-3' style={{height: '3rem'}}></audio>
-                            ) : (
-                              <video src={'../../uploads/'+review.review_path} controls width='27%' className='mb-3'></video>
-                            )}
-                            <a className="mr-20 textColor text-decoration-none text-center font-14 fw-light" >
-                              <i className="bi bi-heart text-pink me-1"></i> {review.likes} Love
-                            </a>
+                  { !reviews ? (
+                      <p className='card-header pt-0 pb-4 textClr font-14'>No Reviews are yet availables for this particular course!!</p>
+                    ) : (
+                    <div className="card-body py-2">
+                      
+                      { reviews.map(review => {
+                        return (
+                          <div className="timeline_item py-0 mb-4" key={review._id}>
+                            <img className="tl_avatar" src={avatar} alt="Avatar" />
+                            <span className='d-flex justify-content-between'>
+                              <a href="" className='text-decoration-none font-16 hoverBlue'> {review.student?.first_name} {review.student?.last_name}</a>
+                              <small className="float-right text-right font-12 textColor"> {formatDateFunction(review.date)}</small>
+                            </span>
+                            <div className="msg my-1 d-flex flex-column align-items-start">
+                              <p className='my-1 mb-3 font-14 textColor'>{review.description}</p>
+                              {review.type === 'audio' ? (
+                                <audio src={'../../uploads/'+review.review_path} controls width='25%' className='mb-3' style={{height: '3rem'}}></audio>
+                              ) : (
+                                <video src={'../../uploads/'+review.review_path} controls width='27%' className='mb-3'></video>
+                              )}
+                              <a className="mr-20 textColor text-decoration-none text-center font-14 fw-light" >
+                                <i className="bi bi-heart text-pink me-1"></i> {review.likes} Love
+                              </a>
+                            </div>
                           </div>
-                        </div>
-                      )
-                    })}
-                  </div>
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -24,9 +24,6 @@ router.get('/course/:courseId', (req, res) => {
         .populate('student')
         .populate('course')
         .then(reviews => {
-            if (reviews.length === 0) {
-                return res.status(404).json({ message: 'No reviews found for this course' });
-            }
             res.json(reviews);
         })
         .catch(err => res.status(400).json({ error: err.message }));

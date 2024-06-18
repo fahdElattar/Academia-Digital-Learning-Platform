@@ -36,9 +36,24 @@ router.post('/', upload.fields([{ name: 'img_path', maxCount: 1 }, { name: 'cour
             if (!professor) {
                 return res.status(404).json({ error: 'Professor not found' });
             }
+
+            let type;
+            if (req.files['course_path']) {
+                const mimetype = req.files['course_path'][0].mimetype;
+                if (mimetype.startsWith('video/')) {
+                    type = 'Video';
+                } else if (mimetype.startsWith('audio/')) {
+                    type = 'Audio';
+                } else {
+                    type = 'Text';
+                }
+            } else {
+                type = 'Text';
+            }
+            
             const courseData = {
                 name: req.body.name,
-                type: req.body.type,
+                type: type,
                 img_path: req.files['img_path'] ? req.files['img_path'][0].filename : null,
                 course_path: req.files['course_path'] ? req.files['course_path'][0].filename : null,
                 description: req.body.description,

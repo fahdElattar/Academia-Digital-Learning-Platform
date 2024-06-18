@@ -15,7 +15,6 @@ const CourseSchema = new mongoose.Schema({
     },
     course_path: {
         type: String,
-        required: true
     },
     description: {
         type: String,

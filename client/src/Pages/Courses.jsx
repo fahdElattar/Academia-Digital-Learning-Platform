@@ -32,7 +32,7 @@ const Courses = ({pageName='Courses'}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !type || !img_path || !course_path || !description || !details || !date || !professor_id) {
+    if (!name || !type || !img_path || !description || !details || !date || !professor_id) {
       alert('Please enter all inputs!!');
       return;
     }
