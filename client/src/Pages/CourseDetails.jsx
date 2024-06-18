@@ -44,8 +44,10 @@ const CourseDetails = ({pageName='Course Details'}) => {
     const [reviewFile, setReviewFile] = useState(null);
     const [reviewDescription, setReviewDescription] = useState('');
     const [reviewStudent, setReviewStudent] = useState('665e2e70c70fcf20f04d4474');
-    const [reviewType, setReviewType] = useState('');
-    const [reviewEmotion, setReviewEmotion] = useState('happy');
+    const [reviewEmotion, setReviewEmotion] = useState('');
+
+    // review button variable
+    const [reviewBtnText, setReviewBtnText] = useState('Initiate')
     
 
     // A hook to retrieve the course from the server side
@@ -161,27 +163,73 @@ const CourseDetails = ({pageName='Course Details'}) => {
 
     // A function to submit a review for the course
     const handleSubmitReview = (e) => {
+
       e.preventDefault();
-      if(!reviewFile || !reviewDescription || !reviewStudent || !reviewEmotion){
+      if(!reviewFile || !reviewDescription || !reviewStudent){
           alert('Please enter all inputs');
           return;
       }
+
+      // Send the review to flask backend to get the emotion
+
+      if(!reviewEmotion) {
+
+        // if the review is a video
+
+        if(reviewFile.type.startsWith('video/')){
+          setReviewBtnText('Loading Video...')
+          const formData = new FormData();
+          formData.append('video', reviewFile);
+          axios.post('http://localhost:5000/predictVideo', formData)
+          .then(res => {
+            setReviewEmotion(res.data.emotion)
+            setReviewBtnText('Send Review')
+          })
+          .catch(err => {
+            setReviewBtnText('Initiate')
+          })
+
+        // if the review is an audio
+
+        } else if(reviewFile.type.startsWith('audio/')){
+          setReviewBtnText('Loading Audio...')
+          const formData = new FormData();
+          formData.append('audio', reviewFile);
+          axios.post('http://localhost:5000/predictAudio', formData)
+          .then(res => {
+            setReviewEmotion(res.data.emotion)
+            setReviewBtnText('Send Review')
+          })
+          .catch(err => {
+            setReviewBtnText('Initiate')
+          })
+        }
+
+      // Once the emotion is set, Send the review to node backend
+      } else {
+
+        const formData = new FormData();
+        formData.append('student', reviewStudent);
+        formData.append('course', id);
+        formData.append('review_path', reviewFile);
+        formData.append('description', reviewDescription);
+        formData.append('emotion', reviewEmotion);
+    
+        axios.post('http://localhost:3000/reviews', formData)
+        .then(res => {
+            setReviewFile(null)
+            setReviewDescription('')
+            setReviewEmotion('')
+            getReviews(id)
+            alert('success');
+            handleClose()
+        })
+        .catch(err => {
+          setReviewEmotion('')
+          alert('error');
+      });
+      }
   
-      const formData = new FormData();
-      formData.append('student', reviewStudent);
-      formData.append('course', id);
-      formData.append('review_path', reviewFile);
-      formData.append('description', reviewDescription);
-      formData.append('emotion', reviewEmotion);
-  
-      axios.post('http://localhost:3000/reviews', formData)
-      .then(res => {
-          setReviewFile(null)
-          setReviewDescription('')
-          getReviews(id)
-          alert('success');
-      })
-      .catch(err => alert('error'));
     }
 
     return (
@@ -581,7 +629,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
                       </div>
                       <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
-                        <button type="submit" className="btn btn-primary">Send review</button>
+                        <button type="submit" className="btn btn-primary">{reviewBtnText}</button>
                       </div>
                     </form>
                   </div>

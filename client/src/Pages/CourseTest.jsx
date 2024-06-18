@@ -24,44 +24,77 @@ const CourseTest = ({pageName='Course Details'}) => {
     const [reviewDescription, setReviewDescription] = useState('');
     const courseId = '665fb7232e7c7c34ec4e78da';
     const [reviewStudent, setReviewStudent] = useState('665e2e70c70fcf20f04d4474');
-    const [reviewEmotion, setReviewEmotion] = useState('happy');
+    const [reviewEmotion, setReviewEmotion] = useState('');
 
     // A hook to retrieve the reviews of the course
     useEffect(() => {
       axios.get(`http://localhost:3000/reviews/course/${courseId}`)
       .then(res => {
         setReviews(res.data)
-        console.log(res.data)
+        // console.log(res.data)
       })
       .catch(err => {
         console.log(err)
       })
     }, [id])
 
+    // button variables
+    const [reviewBtnText, setReviewBtnText] = useState('Initiate')
+
     // A function to submit a review for the course
     const handleSubmitReview = (e) => {
       e.preventDefault();
-      if(!reviewFile || !reviewDescription || !reviewStudent || !reviewEmotion){
+      if(!reviewFile || !reviewDescription || !reviewStudent){
           alert('Please enter all inputs');
           return;
       }
-  
-      const formData = new FormData();
-      formData.append('student', reviewStudent);
-      formData.append('course', courseId);
-      formData.append('review_path', reviewFile);
-      formData.append('description', reviewDescription);
-      formData.append('emotion', reviewEmotion);
-  
-      axios.post('http://localhost:3000/reviews', formData, {
-          headers: {
-              'Content-Type': 'multipart/form-data'
-          }
-      })
-      .then(res => {
-          alert('succes');
-      })
-      .catch(err => alert('error'));
+
+      if(!reviewEmotion) {
+        if(reviewFile.type.startsWith('video/')){
+          setReviewBtnText('Loading Video...')
+          const formData = new FormData();
+          formData.append('video', reviewFile);
+          axios.post('http://localhost:5000/predictVideo', formData)
+          .then(res => {
+            setReviewEmotion(res.data.emotion)
+            setReviewBtnText('Send Review')
+          })
+          .catch(err => {
+            setReviewBtnText('Initiate')
+          })
+        } else if(reviewFile.type.startsWith('audio/')){
+          setReviewBtnText('Loading Audio...')
+          const formData = new FormData();
+          formData.append('audio', reviewFile);
+          axios.post('http://localhost:5000/predictAudio', formData)
+          .then(res => {
+            setReviewEmotion(res.data.emotion)
+            setReviewBtnText('Send Review')
+          })
+          .catch(err => {
+            setReviewBtnText('Initiate')
+          })
+        }
+
+      } else {
+
+        const formData = new FormData();
+        formData.append('student', reviewStudent);
+        formData.append('course', courseId);
+        formData.append('review_path', reviewFile);
+        formData.append('description', reviewDescription);
+        formData.append('emotion', reviewEmotion);
+    
+        axios.post('http://localhost:3000/reviews', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(res => {
+            alert('success');
+        })
+        .catch(err => alert('error'));
+      }
     }
 
     return (
@@ -166,10 +199,11 @@ const CourseTest = ({pageName='Course Details'}) => {
                             onChange={(e) => setReviewDescription(e.target.value)}
                           />
                         </div>
+                        <p className='textClr m-0 font-14'>Emotion : {reviewEmotion}</p>
                       </div>
                       <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
-                        <button type="submit" className="btn btn-primary">Send review</button>
+                        <button type="submit" className="btn btn-primary">{reviewBtnText}</button>
                       </div>
                     </form>
                   </div>
