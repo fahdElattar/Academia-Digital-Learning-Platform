@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import StarterPage from '../Components/StarterPage';
-import '../Css/CourseDetails.css';
 import { Bar, Pie, Doughnut, Line, Radar, Scatter, Bubble, PolarArea } from 'react-chartjs-2';
 import {
   Chart as ChartJS,

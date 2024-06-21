@@ -35,6 +35,17 @@ app.use('/sectors', SectorRoute)
 // Sectors Route
 app.use('/reviews', ReviewRoute)
 
+// Token verification
+app.post('/verify-token', (req, res) => {
+    const token = req.body.token
+    try {
+        const decoded = jwt.verify(token, 'secret')
+        res.json({ status: 'ok', user: decoded })
+    } catch(err) {
+        res.json({ status: 'error', error: 'Invalid Token' })
+    }
+})
+
 // database connection
 mongoose.connect('mongodb://127.0.0.1:27017/academia')
 .then(() => {
