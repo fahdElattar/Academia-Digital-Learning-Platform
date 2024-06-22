@@ -2,9 +2,42 @@ const express = require('express');
 const StudentModel = require('../models/StudentModel');
 const Certificate = require('../models/CertificateModel');
 const multer = require('multer');
+const jwt = require('jsonwebtoken');
 const path = require('path');
+const dotenv = require('dotenv');
 
+dotenv.config();
 const router = express.Router();
+
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await StudentModel.findOne({ email: email });
+
+        if (!user) {
+            return res.status(401).json({ status: 'error', error: 'Invalid login' });
+        }
+
+        if (user.password !== password) {
+            return res.status(401).json({ status: 'error', error: 'Invalid password' });
+        }
+
+        // Generate JWT token with user information
+        const token = jwt.sign({
+            id: user._id,
+            type: 'student',
+            email: user.email
+            // Add more claims as needed
+        }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.json({ status: 'ok', user: token });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'error', error: 'Internal Server Error' });
+    }
+});
+
 
 // Set up multer for file storage
 const storage = multer.diskStorage({
