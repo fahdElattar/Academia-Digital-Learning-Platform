@@ -3,8 +3,48 @@ import StarterPage from '../Components/StarterPage'
 import '../Css/Departements.css'
 import Department_img from '../assets/img/department.jpg'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Courses = ({pageName='Departments'}) => {
+  
+    // Authentication
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        navigate('/login');
+      } else {
+        verifyToken(token);
+      }
+    }, [navigate]);
+
+    const verifyToken = async (token) => {
+      try {
+        const response = await fetch('http://localhost:3000/verify-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token })
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+          setUser(data.user);
+        } else {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+      } catch (err) {
+        console.error('Token verification failed', err);
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    };
   
     const [activeSection, setActiveSection] = useState('departments-list')
 
@@ -73,27 +113,31 @@ const Courses = ({pageName='Departments'}) => {
               <p className='text-uppercase mb-0 fw-light'><span className='text-primary'>ACADEMIA</span> / {pageName}</p>
             </div>
           </div>
-          <div className="links">
-            <ul className='list-unstyled d-flex flex-row'>
-              <li className={`me-4 pt-2 ${activeSection === 'departments-list' ? 'li-active': ''}`}>
-                <a
-                className='text-decoration-none'
-                onClick={(e) => setActiveSection('departments-list')}
-                >Content</a>
-              </li>
-              <li className={`pt-2 ${activeSection === 'add-department' ? 'li-active': ''}`}>
-                <a
-                className='text-decoration-none'
-                onClick={(e) => setActiveSection('add-department')}
-                >Add</a>
-              </li>
-            </ul>
-          </div>
+          
+          { user?.type === 'admin' &&
+          (
+            <div className="links">
+              <ul className='list-unstyled d-flex flex-row'>
+                <li className={`me-4 pt-2 ${activeSection === 'departments-list' ? 'li-active': ''}`}>
+                  <a
+                  className='text-decoration-none'
+                  onClick={(e) => setActiveSection('departments-list')}
+                  >Content</a>
+                </li>
+                <li className={`pt-2 ${activeSection === 'add-department' ? 'li-active': ''}`}>
+                  <a
+                  className='text-decoration-none'
+                  onClick={(e) => setActiveSection('add-department')}
+                  >Add</a>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Page Body */}
 
-        <div className="section-body mt-4">
+        <div className="section-body mt-4 pb-5">
           <div className="container-fluid p-0">
 
             <div className="tab-content">
@@ -122,14 +166,17 @@ const Courses = ({pageName='Departments'}) => {
                                   <small className="d-block text-muted">{department.sectorCount} Availables</small>
                                 </div>
                               </div>
-                              <div className="ml-auto text-muted float-end">
-                                <button type="button" className="btn btn-icon btn-sm">
-                                  <i className="bi bi-pencil text-success"></i>
-                                </button>
-                                <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={(e) => handleDelete(department._id)}>
-                                  <i className="bi bi-trash text-danger"></i>
-                                </button>
-                              </div>
+                              { user?.type === 'admin' &&
+                              (
+                                <div className="ml-auto text-muted float-end">
+                                  <button type="button" className="btn btn-icon btn-sm">
+                                    <i className="bi bi-pencil text-success"></i>
+                                  </button>
+                                  <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={(e) => handleDelete(department._id)}>
+                                    <i className="bi bi-trash text-danger"></i>
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>

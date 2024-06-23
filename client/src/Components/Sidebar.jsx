@@ -1,7 +1,15 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import '../Css/Sidebar.css'
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
   return (
     <div className='sidebar py-4 px-0'>
       <div className="left-side">
@@ -16,9 +24,9 @@ const Sidebar = () => {
         <div className="down-area">
           <ul className='links'>
             <li className='link'>
-              <Link to='/login' className='text-dark '>
+              <button className='text-dark btn' onClick={handleLogout} style={{fontSize:'19px'}}>
                 <i className="bi bi-power"></i>
-              </Link>
+              </button>
             </li>
           </ul>
         </div>
@@ -81,16 +89,22 @@ const Sidebar = () => {
         <div className='extra'>
           <h6>EXTRA</h6>
           <ul className='links'>
-            <li className='link'>
+            {/* <li className='link'>
               <a>
                 <i className="bi bi-chat-dots-fill"></i>
                 Contact
               </a>
-            </li>
+            </li> */}
             <li className='link'>
               <Link to='/myCourses'>
                 <i className="bi bi-building-fill"></i>
                 My Courses
+              </Link>
+            </li>
+            <li className='link'>
+              <Link to='/myCourses'>
+                <i className="bi bi-bookmark-check-fill"></i>
+                My Certificates
               </Link>
             </li>
           </ul>

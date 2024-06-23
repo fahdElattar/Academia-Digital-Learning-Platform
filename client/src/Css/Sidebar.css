@@ -152,3 +152,8 @@
     font-size: .7rem;
     font-weight: 400;
 }
+
+.right-side .links .link.active {
+    border: 1px solid transparent;
+    border-right-color: black;
+}

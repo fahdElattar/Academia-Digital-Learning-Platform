@@ -1,10 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import StarterPage from '../Components/StarterPage';
 import '../Css/Courses.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Courses = ({pageName='Courses'}) => {
+  
+  // Authentication
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      navigate('/login');
+    } else {
+      verifyToken(token);
+    }
+  }, [navigate]);
+
+  const verifyToken = async (token) => {
+    try {
+      const response = await fetch('http://localhost:3000/verify-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token })
+      });
+
+      const data = await response.json();
+
+      if (data.status === 'ok') {
+        setUser(data.user);
+      } else {
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    } catch (err) {
+      console.error('Token verification failed', err);
+      localStorage.removeItem('token');
+      navigate('/login');
+    }
+  };
+
   const [activeSection, setActiveSection] = useState('courses-list');
   const [courses, setCourses] = useState([]);
 
@@ -27,7 +67,7 @@ const Courses = ({pageName='Courses'}) => {
   const [description, setDescription] = useState('');
   const [details, setDetails] = useState('');
   const [date, setDate] = useState('');
-  const [professor_id, setProfessor_id] = useState('665fabb1c210b12359d3770f');
+  const professor_id = user?.id
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,7 +101,6 @@ const Courses = ({pageName='Courses'}) => {
         setDescription('');
         setDetails('');
         setDate('');
-        // setProfessor_id('');
         getCourses()
         setActiveSection('courses-list')
       })
@@ -83,16 +122,19 @@ const Courses = ({pageName='Courses'}) => {
             <p className='text-uppercase mb-0 fw-light'><span className='text-primary'>ACADEMIA</span> / {pageName}</p>
           </div>
         </div>
-        <div className="links">
-          <ul className='list-unstyled d-flex flex-row'>
-            <li className={`me-4 pt-2 ${activeSection === 'courses-list' ? 'li-active' : ''}`}>
-              <a className='text-decoration-none' onClick={(e) => setActiveSection('courses-list')}>Content</a>
-            </li>
-            <li className={`pt-2 ${activeSection === 'add-course' ? 'li-active' : ''}`}>
-              <a className='text-decoration-none' onClick={(e) => setActiveSection('add-course')}>Add</a>
-            </li>
-          </ul>
-        </div>
+        { user?.type === 'professor' &&
+        (
+          <div className="links">
+            <ul className='list-unstyled d-flex flex-row'>
+              <li className={`me-4 pt-2 ${activeSection === 'courses-list' ? 'li-active' : ''}`}>
+                <a className='text-decoration-none' onClick={(e) => setActiveSection('courses-list')}>Content</a>
+              </li>
+              <li className={`pt-2 ${activeSection === 'add-course' ? 'li-active' : ''}`}>
+                <a className='text-decoration-none' onClick={(e) => setActiveSection('add-course')}>Add</a>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Page Body */}

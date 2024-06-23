@@ -2,8 +2,49 @@ import React, { useEffect, useState } from 'react';
 import StarterPage from '../Components/StarterPage';
 import '../Css/Professors.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Professors = ({ pageName = 'Professors' }) => {
+
+  // Authentication
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      navigate('/login');
+    } else {
+      verifyToken(token);
+    }
+  }, [navigate]);
+
+  const verifyToken = async (token) => {
+    try {
+      const response = await fetch('http://localhost:3000/verify-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token })
+      });
+
+      const data = await response.json();
+
+      if (data.status === 'ok') {
+        setUser(data.user);
+      } else {
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    } catch (err) {
+      console.error('Token verification failed', err);
+      localStorage.removeItem('token');
+      navigate('/login');
+    }
+  };
+
   const [activeSection, setActiveSection] = useState('prof-list');
   const [professors, setProfessors] = useState([]);
   const [sectors, setSectors] = useState([]);
@@ -108,22 +149,25 @@ const Professors = ({ pageName = 'Professors' }) => {
             <p className='text-uppercase mb-0 fw-light'><span className='text-primary'>ACADEMIA</span> / {pageName}</p>
           </div>
         </div>
-        <div className="links">
-          <ul className='list-unstyled d-flex flex-row'>
-            <li className={`me-4 pt-2 ${activeSection === 'prof-list' ? 'li-active' : ''}`}>
-              <a
-                className='text-decoration-none'
-                onClick={() => setActiveSection('prof-list')}
-              >Content</a>
-            </li>
-            <li className={`pt-2 ${activeSection === 'add-prof' ? 'li-active' : ''}`}>
-              <a
-                className='text-decoration-none'
-                onClick={() => setActiveSection('add-prof')}
-              >Add</a>
-            </li>
-          </ul>
-        </div>
+        { user?.type === 'admin' &&
+        (
+          <div className="links">
+            <ul className='list-unstyled d-flex flex-row'>
+              <li className={`me-4 pt-2 ${activeSection === 'prof-list' ? 'li-active' : ''}`}>
+                <a
+                  className='text-decoration-none'
+                  onClick={() => setActiveSection('prof-list')}
+                >Content</a>
+              </li>
+              <li className={`pt-2 ${activeSection === 'add-prof' ? 'li-active' : ''}`}>
+                <a
+                  className='text-decoration-none'
+                  onClick={() => setActiveSection('add-prof')}
+                >Add</a>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Page Body */}
@@ -141,16 +185,20 @@ const Professors = ({ pageName = 'Professors' }) => {
                         <img className="card-profile-img" src={'../../uploads/'+professor.img_path} alt="Profile" style={{width:"6rem", height:"6rem"}}/>
                         <h5 className="mb-0 text-capitalize">{professor.last_name} {professor.first_name}</h5>
                         <span className="text-muted text-capitalize">{professor.specialty_id?.name}</span>
+                        <p className="text-muted text-capitalize m-0">{professor.sector_id?.name}</p>
                         <div className="text-muted">{professor.phone_number}</div>
-                        <p className="mb-3 mt-1 text-muted text-capitalize">{professor.sector_id?.name}</p>
-                        <div className="d-flex justify-content-center align-items-center mb-1">
-                          <button className="btn btn-outline-primary btn-sm me-2">
-                            <i className='bi bi-pencil'></i>
-                          </button>
-                          <button type='button' onClick={(e) => handleDelete(professor._id)} className="btn btn-outline-secondary btn-sm">
-                            <i className='bi bi-trash'></i>
-                          </button>
-                        </div>
+                        <button className='btn btn-outline-secondary btn-sm mt-3 mb-2'>Discover</button>
+                        {/* { user?.type === 'admin' &&
+                        (
+                          <div className="d-flex flex-column justify-content-center align-items-center mt-3 mb-1">
+                            <button className="btn btn-outline-success btn-sm mb-2 font-12">
+                              <i className='bi bi-pencil me-2 font-12'></i>Edit
+                            </button>
+                            <button type='button' className="btn btn-outline-danger btn-sm font-12" onClick={(e) => handleDelete(professor._id)}>
+                              <i className='bi bi-trash me-2'></i>Delete
+                            </button>
+                          </div>
+                        )} */}
                       </div>
                     </div>
                   </div>

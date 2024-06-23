@@ -3,8 +3,49 @@ import StarterPage from '../Components/StarterPage'
 import '../Css/Students.css'
 import avatar from '../assets/img/avatar1.jpg'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Courses = ({pageName='Students'}) => {
+
+    // Authentication
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        navigate('/login');
+      } else {
+        verifyToken(token);
+      }
+    }, [navigate]);
+
+    const verifyToken = async (token) => {
+      try {
+        const response = await fetch('http://localhost:3000/verify-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token })
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+          setUser(data.user);
+        } else {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+      } catch (err) {
+        console.error('Token verification failed', err);
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    };
+
     const [students, setStudents] = useState([])
 
     const [last_name, setLast_name] = useState('')
@@ -53,7 +94,7 @@ const Courses = ({pageName='Students'}) => {
 
         {/* Page Body */}
 
-        <div className="section-body mt-4">
+        <div className="section-body mt-4 pb-5 mb-3">
           <div className="container-fluid p-0">
             <div className="row">
               {/* Professor */}
@@ -68,7 +109,7 @@ const Courses = ({pageName='Students'}) => {
                       <th className='text-capitalize'>Phone</th>
                       <th className='text-capitalize'>Sex</th>
                       <th className='text-capitalize'>Date of Birth</th>
-                      <th className='text-capitalize'>Action</th>
+                      { user?.type === 'admin' && ( <th className='text-capitalize'>Action</th> )}
                     </tr>
                   </thead>
                   <tbody>
@@ -83,20 +124,24 @@ const Courses = ({pageName='Students'}) => {
                           </td>
                           <td className='text-secondary'><span className="font-14 text-capitalize">{student.first_name} {student.last_name}</span></td>
                           <td className='text-secondary'>{student.email}</td>
-                          <td className='text-secondary'>{student.phone_number}</td>
+                          <td className='text-secondary'>0{student.phone_number}</td>
                           <td className='text-secondary'>{student.sex}</td>
                           <td className='text-secondary'>{formattedDateOfBirth}</td>
-                          <td>
-                            <button type="button" className="btn btn-icon btn-sm">
-                              <i className="bi bi-eye-fill"></i>
-                            </button>
-                            <button type="button" className="btn btn-icon btn-sm">
-                              <i className="bi bi-pencil text-success"></i>
-                            </button>
-                            <button type="button" onClick={(e) => handleDelete(student._id)} className="btn btn-icon btn-sm js-sweetalert">
-                              <i className="bi bi-trash text-danger"></i>
-                            </button>
-                          </td>
+                          
+                          { user?.type === 'admin' &&
+                          (
+                            <td>
+                              <button type="button" className="btn btn-icon btn-sm">
+                                <i className="bi bi-eye-fill"></i>
+                              </button>
+                              <button type="button" className="btn btn-icon btn-sm">
+                                <i className="bi bi-pencil text-success"></i>
+                              </button>
+                              <button type="button" onClick={(e) => handleDelete(student._id)} className="btn btn-icon btn-sm js-sweetalert">
+                                <i className="bi bi-trash text-danger"></i>
+                              </button>
+                            </td>
+                          )}
                         </tr>
                       )
                     })}

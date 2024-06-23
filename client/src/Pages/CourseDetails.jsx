@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import StarterPage from '../Components/StarterPage'
 import '../Css/CourseDetails.css'
 import avatar from '../assets/img/avatar.jpg'
-import Angry_Video from '../assets/courses/angry.mp4'
 import { Link, useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import CourseCharts from './CourseCharts'
@@ -10,9 +9,48 @@ import axios from 'axios'
 
 const CourseDetails = ({pageName='Course Details'}) => {
 
+    // Authentication
+    const navigate = useNavigate()
+    const [user, setUser] = useState(null);
+    const [enrolled, setEnrolled] = useState(false);
+
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        navigate('/login');
+      } else {
+        verifyToken(token);
+      }
+    }, [navigate]);
+
+    const verifyToken = async (token) => {
+      try {
+        const response = await fetch('http://localhost:3000/verify-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token })
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+          setUser(data.user);
+        } else {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+      } catch (err) {
+        console.error('Token verification failed', err);
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    };
+
     // Retreive the course id from the url params
     const {id} = useParams()
-    const navigate = useNavigate()
 
     // variables related to the sections to show and the review modal
     const [video, setVideo] = useState(false)
@@ -43,7 +81,8 @@ const CourseDetails = ({pageName='Course Details'}) => {
     const [reviews, setReviews] = useState([]);
     const [reviewFile, setReviewFile] = useState(null);
     const [reviewDescription, setReviewDescription] = useState('');
-    const [reviewStudent, setReviewStudent] = useState('665e2e70c70fcf20f04d4474');
+    const reviewStudent = user?.id;
+    // const [reviewStudent, setReviewStudent] = useState('665e2e70c70fcf20f04d4474');
     const [reviewEmotion, setReviewEmotion] = useState('');
 
     // review button variable
@@ -89,6 +128,13 @@ const CourseDetails = ({pageName='Course Details'}) => {
             setCourseText(true);
           }
 
+          const studentId = user?.id;
+          courseData.students.map(student => {
+            if(student?._id === studentId){
+              console.log('yeees')
+              setEnrolled(true)
+            }
+          });
         })
         .catch(err => console.log(err));
     }, [id]);
@@ -232,6 +278,13 @@ const CourseDetails = ({pageName='Course Details'}) => {
   
     }
 
+    // const isEnrolled = () => {
+    //   const studentId = '665e2e70c70fcf20f04d4474'; // Replace with the actual student ID you are checking
+    //   const isEnrolled = course.students.some(student => student._id === studentId);
+    //   console.log(isEnrolled ? 'Student is enrolled in the course.' : 'Student is not enrolled in the course.');
+    // };
+    // isEnrolled();
+
     return (
       <StarterPage>
 
@@ -254,14 +307,16 @@ const CourseDetails = ({pageName='Course Details'}) => {
                 onClick={(e) => setActiveSection('course-details')}
                 >Content</a>
               </li>
-              {reviews.length !== 0 && (
+
+              {(user?.id === professor_id && reviews.length !== 0) ? (
                 <li className={`me-4 pt-2 ${activeSection === 'course-visualisation' ? 'li-active': ''}`}>
                   <a
                   className='text-decoration-none'
                   onClick={(e) => setActiveSection('course-visualisation')}
                   >Visualisation</a>
                 </li>
-              )}
+              ) : '' }
+
               {reviews.length !== 0 && (
                 <li className={`me-4 pt-2 ${activeSection === 'course-reviews' ? 'li-active': ''}`}>
                   <a
@@ -270,19 +325,22 @@ const CourseDetails = ({pageName='Course Details'}) => {
                   >Reviews</a>
                 </li>
               )}
-              <li className={`pt-2 ${activeSection === 'edit-course' ? 'li-active': ''}`}>
-                <a
-                className='text-decoration-none'
-                onClick={(e) => setActiveSection('edit-course')}
-                >Settings</a>
-              </li>
+              
+              {(user?.id === professor_id?._id) ? (
+                <li className={`pt-2 ${activeSection === 'edit-course' ? 'li-active': ''}`}>
+                  <a
+                  className='text-decoration-none'
+                  onClick={(e) => setActiveSection('edit-course')}
+                  >Settings</a>
+                </li>
+              ) : '' }
             </ul>
           </div>
         </div>
 
         {/* Page Body */}
 
-        <div className="section-body my-4 pb-2">
+        <div className="section-body my-4 pb-5">
           <div className="container-fluid p-0">
 
             <div className="tab-content">
@@ -355,60 +413,64 @@ const CourseDetails = ({pageName='Course Details'}) => {
                   </div>
 
                   {/* course content */}
+                  {enrolled && 
+                  (
+                    <div className="col-xl-8 col-lg-7 col-md-12">
 
-                  <div className="col-xl-8 col-lg-7 col-md-12">
+                      {/* input course */}
 
-                    {/* input course */}
+                      <div className="card">
+                        <div className="card-header pt-4 pb-2">
+                          <h5 className="m-0">Course Content</h5>
+                        </div>
 
-                    <div className="card">
-                      <div className="card-header pt-4 pb-2">
-                        <h5 className="m-0">Course Content</h5>
+                        {/* if the course is a video */}
+
+                        { video && (
+                            <div className="card-body pt-3 pb-4 course-content">
+                              <video src={'../../uploads/'+course.course_path} className='w-100' controls></video>
+                              <p className='mt-3'>{course.details}</p>
+                            </div>
+                          )
+                        }
+
+                        {/* if the course is an audio */}
+
+                        { audio && (
+                            <div className="card-body pt-3 pb-4 course-content">
+                              <audio src={'../../uploads/'+course.course_path} className='w-100' controls></audio>
+                              <p className='mt-3'>{course.details}</p>
+                            </div>
+                          )
+                        }
+                        
+                        {/* if the course is a text */}
+
+                        {courseText && (
+                            <div className="card-body pt-2 pb-4 course-content">
+                              <p>{course.details}</p>
+                            </div>
+                          )
+                        }
+
                       </div>
 
-                      {/* if the course is a video */}
+                      {/* certificate */}
 
-                      { video && (
-                          <div className="card-body pt-3 pb-4 course-content">
-                            <video src={'../../uploads/'+course.course_path} className='w-100' controls></video>
-                            <p className='mt-3'>{course.details}</p>
+                      { user?.type === 'student' &&
+                      (
+                        <div className="card">
+                          <div className="card-header pt-4 pb-2">
+                            <h5 className="m-0">Receive Certificate</h5>
                           </div>
-                        )
-                      }
-
-                      {/* if the course is an audio */}
-
-                      { audio && (
-                          <div className="card-body pt-3 pb-4 course-content">
-                            <audio src={'../../uploads/'+course.course_path} className='w-100' controls></audio>
-                            <p className='mt-3'>{course.details}</p>
+                          <div className="card-body course-content pt-1">
+                            <p className='mt-0 '>This course's certificate serves as a testament to your hard work and dedication throughout the program. However, before we can issue your certificate, we kindly request that you post a review of your experience. Your feedback is invaluable to us and helps future students make informed decisions.</p>
+                            <button className='btn btn-primary mb-1' onClick={handleShow}>Publish Review</button>
                           </div>
-                        )
-                      }
-                      
-                      {/* if the course is a text */}
-
-                      {courseText && (
-                          <div className="card-body pt-2 pb-4 course-content">
-                            <p>{course.details}</p>
-                          </div>
-                        )
-                      }
-
+                        </div>
+                      )}
                     </div>
-
-                    {/* certificate */}
-
-                    <div className="card">
-                      <div className="card-header pt-4 pb-2">
-                        <h5 className="m-0">Receive Certificate</h5>
-                      </div>
-                      <div className="card-body course-content pt-1">
-                        <p className='mt-0 '>This course's certificate serves as a testament to your hard work and dedication throughout the program. However, before we can issue your certificate, we kindly request that you post a review of your experience. Your feedback is invaluable to us and helps future students make informed decisions.</p>
-                        <button className='btn btn-primary mb-1' onClick={handleShow}>Post Review</button>
-                      </div>
-                    </div>
-
-                  </div>
+                  )}
                 </div>
 
               </div>

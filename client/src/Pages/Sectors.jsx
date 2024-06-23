@@ -3,8 +3,48 @@ import StarterPage from '../Components/StarterPage'
 import '../Css/Sectors.css'
 import axios from 'axios'
 import Department_img from '../assets/img/department4.jpg'
+import { useNavigate } from 'react-router-dom'
 
 const Sectors = ({pageName='Sectors'}) => {
+
+    // Authentication
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        navigate('/login');
+      } else {
+        verifyToken(token);
+      }
+    }, [navigate]);
+
+    const verifyToken = async (token) => {
+      try {
+        const response = await fetch('http://localhost:3000/verify-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token })
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+          setUser(data.user);
+        } else {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+      } catch (err) {
+        console.error('Token verification failed', err);
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    };
   
     const [activeSection, setActiveSection] = useState('sectors-list')
 
@@ -80,27 +120,31 @@ const Sectors = ({pageName='Sectors'}) => {
               <p className='text-uppercase mb-0 fw-light'><span className='text-primary'>ACADEMIA</span> / {pageName}</p>
             </div>
           </div>
-          <div className="links">
-            <ul className='list-unstyled d-flex flex-row'>
-              <li className={`me-4 pt-2 ${activeSection === 'sectors-list' ? 'li-active': ''}`}>
-                <a
-                className='text-decoration-none'
-                onClick={(e) => setActiveSection('sectors-list')}
-                >Content</a>
-              </li>
-              <li className={`pt-2 ${activeSection === 'add-sector' ? 'li-active': ''}`}>
-                <a
-                className='text-decoration-none'
-                onClick={(e) => setActiveSection('add-sector')}
-                >Add</a>
-              </li>
-            </ul>
-          </div>
+          
+          { user?.type === 'admin' &&
+          (
+            <div className="links">
+              <ul className='list-unstyled d-flex flex-row'>
+                <li className={`me-4 pt-2 ${activeSection === 'sectors-list' ? 'li-active': ''}`}>
+                  <a
+                  className='text-decoration-none'
+                  onClick={(e) => setActiveSection('sectors-list')}
+                  >Content</a>
+                </li>
+                <li className={`pt-2 ${activeSection === 'add-sector' ? 'li-active': ''}`}>
+                  <a
+                  className='text-decoration-none'
+                  onClick={(e) => setActiveSection('add-sector')}
+                  >Add</a>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Page Body */}
 
-        <div className="section-body mt-4">
+        <div className="section-body mt-4 pb-5">
           <div className="container-fluid p-0">
 
             <div className="tab-content">
@@ -109,7 +153,7 @@ const Sectors = ({pageName='Sectors'}) => {
 
               <div className={`tab-pane ${activeSection === 'sectors-list' ? 'active': ''}`}>
                 <div className="row">
-                  {sectors.map(sector => {
+                  { sectors.map(sector => {
                     return (
                       <div className="col-xl-4 col-lg-4 col-md-6" key={sector._id}>
                         <div className="card">
@@ -129,14 +173,18 @@ const Sectors = ({pageName='Sectors'}) => {
                                   <small className="d-block text-muted">{sector.professorCount} Availables</small>
                                 </div>
                               </div>
-                              <div className="ml-auto text-muted float-end">
-                                <button type="button" className="btn btn-icon btn-sm">
-                                  <i className="bi bi-pencil text-success"></i>
-                                </button>
-                                <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={(e) => handleDelete(sector._id)}>
-                                  <i className="bi bi-trash text-danger"></i>
-                                </button>
-                              </div>
+                              
+                              { user?.type === 'admin' &&
+                              (
+                                <div className="ml-auto text-muted float-end">
+                                  <button type="button" className="btn btn-icon btn-sm">
+                                    <i className="bi bi-pencil text-success"></i>
+                                  </button>
+                                  <button type="button" className="btn btn-icon btn-sm js-sweetalert" onClick={(e) => handleDelete(sector._id)}>
+                                    <i className="bi bi-trash text-danger"></i>
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>

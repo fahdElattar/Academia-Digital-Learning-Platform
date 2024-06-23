@@ -49,6 +49,8 @@ app.use('/sectors', SectorRoute)
 // Sectors Route
 app.use('/reviews', ReviewRoute)
 
+// Authentication
+
 app.post('/loginStudent', async (req, res) => {
     const { email, password } = req.body;
 
@@ -67,8 +69,10 @@ app.post('/loginStudent', async (req, res) => {
         // Generate JWT token with user information
         const token = jwt.sign({
             id: user._id,
+            last_name: user.last_name,
+            first_name: user.first_name,
             type: 'student',
-            email: user.email
+            img_path: user.img_path
             // Add more claims as needed
         }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
@@ -97,8 +101,10 @@ app.post('/loginProfessor', async (req, res) => {
         // Generate JWT token with user information
         const token = jwt.sign({
             id: user._id,
+            last_name: user.last_name,
+            first_name: user.first_name,
             type: 'professor',
-            email: user.email
+            img_path: user.img_path
             // Add more claims as needed
         }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
@@ -127,8 +133,10 @@ app.post('/loginAdmin', async (req, res) => {
         // Generate JWT token with user information
         const token = jwt.sign({
             id: user._id,
+            last_name: user.last_name,
+            first_name: user.first_name,
             type: 'admin',
-            email: user.email
+            img_path: user.img_path
             // Add more claims as needed
         }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
