@@ -127,14 +127,6 @@ const CourseDetails = ({pageName='Course Details'}) => {
           } else {
             setCourseText(true);
           }
-
-          const studentId = user?.id;
-          courseData.students.map(student => {
-            if(student?._id === studentId){
-              console.log('yeees')
-              setEnrolled(true)
-            }
-          });
         })
         .catch(err => console.log(err));
     }, [id]);
@@ -273,17 +265,47 @@ const CourseDetails = ({pageName='Course Details'}) => {
         .catch(err => {
           setReviewEmotion('')
           alert('error');
-      });
+        });
+        
+        axios.post('http://localhost:3000/reviews', formData)
+        .then(res => {
+            setReviewFile(null)
+            setReviewDescription('')
+            setReviewEmotion('')
+            getReviews(id)
+            alert('success');
+            handleClose()
+        })
+        .catch(err => {
+          setReviewEmotion('')
+          alert('error');
+        });
+
       }
   
     }
 
-    // const isEnrolled = () => {
-    //   const studentId = '665e2e70c70fcf20f04d4474'; // Replace with the actual student ID you are checking
-    //   const isEnrolled = course.students.some(student => student._id === studentId);
-    //   console.log(isEnrolled ? 'Student is enrolled in the course.' : 'Student is not enrolled in the course.');
-    // };
-    // isEnrolled();
+    const handleEnroll = (e) => {
+      e.preventDefault();
+      axios.post(`http://localhost:3000/courses/${id}/enroll`, {
+        studentId: user?.id
+      })
+      .then(res => {
+        setEnrolled(true)
+        alert('Enrolled successfully')
+      }
+      )
+      .catch(err => alert(err))
+    }
+
+    // const studentId = user?.id;
+    //   const students = course.students;
+    //   students.map(student => {
+    //     if(student?._id === studentId){
+    //       console.log('yeees')
+    //       setEnrolled(true)
+    //     }
+    // });
 
     return (
       <StarterPage>
@@ -308,7 +330,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
                 >Content</a>
               </li>
 
-              {(user?.id === professor_id && reviews.length !== 0) ? (
+              {(user?.id === professor_id?._id && reviews.length !== 0) ? (
                 <li className={`me-4 pt-2 ${activeSection === 'course-visualisation' ? 'li-active': ''}`}>
                   <a
                   className='text-decoration-none'
@@ -413,7 +435,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
                   </div>
 
                   {/* course content */}
-                  {enrolled && 
+                  {(enrolled || user?.type === 'admin' || user?.type === 'professor') ? 
                   (
                     <div className="col-xl-8 col-lg-7 col-md-12">
 
@@ -470,6 +492,25 @@ const CourseDetails = ({pageName='Course Details'}) => {
                         </div>
                       )}
                     </div>
+                  ) : (
+                    
+                    <div className="col-xl-8 col-lg-7 col-md-12">
+
+                      {/* Enroll */}
+
+                      { user?.type === 'student' &&
+                      (
+                        <div className="card">
+                          <div className="card-header pt-4 pb-2">
+                            <h5 className="m-0">Enroll in this course</h5>
+                          </div>
+                          <div className="card-body course-content pt-1">
+                            <p className='mt-0 '>Enrolling in this course offers you a unique opportunity to gain in-depth knowledge and practical skills from industry experts. Whether you're looking to advance your career, enhance your personal development, or simply explore a new field, this course is designed to provide you with the tools and insights needed to succeed. With engaging content, hands-on projects, and a supportive learning community, you'll be well-equipped to tackle real-world challenges and achieve your goals.</p>
+                            <button className='btn btn-primary mb-1' onClick={handleEnroll}>Register Now</button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
 
@@ -490,7 +531,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
                       { reviews.map(review => {
                         return (
                           <div className="timeline_item py-0 mb-4" key={review._id}>
-                            <img className="tl_avatar" src={avatar} alt="Avatar" />
+                            <img className="tl_avatar" src={'../../uploads/'+review.student?.img_path} alt="Avatar" style={{width: "2rem", height: "2rem"}}/>
                             <span className='d-flex justify-content-between'>
                               <a href="" className='text-decoration-none font-16 hoverBlue'> {review.student?.first_name} {review.student?.last_name}</a>
                               <small className="float-right text-right font-12 textColor"> {formatDateFunction(review.date)}</small>

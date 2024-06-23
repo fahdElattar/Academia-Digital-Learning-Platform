@@ -1,6 +1,7 @@
 const express = require('express');
 const StudentModel = require('../models/StudentModel');
 const Certificate = require('../models/CertificateModel');
+const Course = require('../models/CourseModel');
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
 const path = require('path');
@@ -131,6 +132,21 @@ router.get('/:id/certificates', (req, res) => {
     Certificate.find({ student: req.params.id })
         .populate('course')
         .then(certificates => res.json(certificates))
+        .catch(err => res.status(500).json({ error: err.message }));
+});
+
+// Get courses a student is enrolled in
+router.get('/student/:studentId', (req, res) => {
+    const studentId = req.params.studentId;
+    Course.find({ students: studentId })
+        .populate('professor_id')
+        .populate('students')
+        .then(courses => {
+            if (courses.length === 0) {
+                return res.status(404).json({ error: 'No courses found for this student' });
+            }
+            res.json(courses);
+        })
         .catch(err => res.status(500).json({ error: err.message }));
 });
 

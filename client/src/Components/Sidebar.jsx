@@ -96,13 +96,13 @@ const Sidebar = () => {
               </a>
             </li> */}
             <li className='link'>
-              <Link to='/myCourses'>
+              <Link to='/mycourses'>
                 <i className="bi bi-building-fill"></i>
                 My Courses
               </Link>
             </li>
             <li className='link'>
-              <Link to='/myCourses'>
+              <Link to='/mycertificates'>
                 <i className="bi bi-bookmark-check-fill"></i>
                 My Certificates
               </Link>
