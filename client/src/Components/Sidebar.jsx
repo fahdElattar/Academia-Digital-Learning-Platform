@@ -1,9 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import '../Css/Sidebar.css'
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      navigate('/login');
+    } else {
+      verifyToken(token);
+    }
+  }, [navigate]);
+
+  const verifyToken = async (token) => {
+    try {
+      const response = await fetch('http://localhost:3000/verify-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token })
+      });
+
+      const data = await response.json();
+
+      if (data.status === 'ok') {
+        setUser(data.user);
+      } else {
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    } catch (err) {
+      console.error('Token verification failed', err);
+      localStorage.removeItem('token');
+      navigate('/login');
+    }
+  };
   
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -86,7 +122,9 @@ const Sidebar = () => {
             </Link>
           </li>
         </ul>
-        <div className='extra'>
+        {user?.type === 'student' && 
+        (
+          <div className='extra'>
           <h6>EXTRA</h6>
           <ul className='links'>
             {/* <li className='link'>
@@ -109,6 +147,8 @@ const Sidebar = () => {
             </li>
           </ul>
         </div>
+        )}
+        
       </div>
     </div>
   )

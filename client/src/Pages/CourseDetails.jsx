@@ -93,9 +93,10 @@ const CourseDetails = ({pageName='Course Details'}) => {
     useEffect(() => {
       axios.get('http://localhost:3000/courses/' + id)
         .then(res => {
-
+          
           // the course's basic information
           const courseData = res.data;
+          console.log(courseData)
           setCourse(courseData);
           setName(courseData.name);
           setType(courseData.type);
@@ -134,6 +135,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
     const getReviews = (id) => {
       axios.get('http://localhost:3000/reviews/course/'+id)
       .then(res => {
+        console.log(res.data)
         setReviews(res.data)
       })
       .catch(err => {
@@ -690,7 +692,7 @@ const CourseDetails = ({pageName='Course Details'}) => {
               {/* Course Charts Visualisation */}
 
               <div className={`tab-pane ${activeSection === 'course-visualisation' ? 'active': ''}`}>
-                <CourseCharts />
+                <CourseCharts courseId={id}/>
               </div>
 
             </div>

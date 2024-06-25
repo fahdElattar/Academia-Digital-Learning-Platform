@@ -74,8 +74,57 @@ router.post('/', upload.single('review_path'), (req, res) => {
             res.status(400).json({ error: err.message });
         });
 });
+// Get statistics for a specific course
+router.get('/course/:courseId/statistics', async (req, res) => {
+    const { courseId } = req.params;
+    try {
+        // Fetch reviews sorted by date
+        const reviews = await Review.find({ course: courseId })
+            .populate('student')
+            .populate('course')
+            .sort({ date: 1 }); // 1 for ascending, -1 for descending
 
-module.exports = router;
+        const emotionCounts = {
+            anger: 0,
+            fear: 0,
+            disgust: 0,
+            neutral: 0,
+            happy: 0,
+            sad: 0,
+            surprise: 0,
+        };
+
+        const emotionByGender = {
+            male: { anger: 0, fear: 0, disgust: 0, neutral: 0, happy: 0, sad: 0, surprise: 0 },
+            female: { anger: 0, fear: 0, disgust: 0, neutral: 0, happy: 0, sad: 0, surprise: 0 }
+        };
+
+        const emotionByDate = {};
+
+        reviews.forEach(review => {
+            emotionCounts[review.emotion]++;
+            const gender = review.student.sex.toLowerCase();
+            emotionByGender[gender][review.emotion]++;
+
+            const date = new Date(review.date).toLocaleDateString();
+            if (!emotionByDate[date]) {
+                emotionByDate[date] = { anger: 0, fear: 0, disgust: 0, neutral: 0, happy: 0, sad: 0, surprise: 0 };
+            }
+            emotionByDate[date][review.emotion]++;
+        });
+
+        const stats = {
+            totalReviews: reviews.length,
+            emotionCounts,
+            emotionByGender,
+            emotionByDate,
+        };
+
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 // Delete a review by ID
 router.delete('/:id', (req, res) => {

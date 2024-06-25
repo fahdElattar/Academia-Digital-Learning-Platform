@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bar, Pie, Doughnut, Line, Radar, Scatter, Bubble, PolarArea } from 'react-chartjs-2';
+import axios from 'axios';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -29,41 +30,27 @@ ChartJS.register(
   Filler
 );
 
-const CourseCharts = () => {
+const CourseCharts = ({ courseId }) => {
+  const [stats, setStats] = useState(null);
 
-  const generateFakeData = () => {
-    const emotions = ['anger', 'fear', 'disgust', 'neutral', 'happy', 'sad', 'surprise'];
-    const reviews = [];
+  useEffect(() => {
+    axios.get(`http://localhost:3000/reviews/course/${courseId}/statistics`)
+      .then(response => {
+        setStats(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching statistics:', error);
+      });
+  }, [courseId]);
 
-    for (let i = 0; i < 100; i++) {
-      const emotion = emotions[Math.floor(Math.random() * emotions.length)];
-      reviews.push({ studentId: i + 1, emotion });
-    }
+  if (!stats) return <div>Loading...</div>;
 
-    return reviews;
-  };
-
-  const reviews = generateFakeData();
-
-  const aggregateData = (reviews) => {
-    const emotionCounts = {
-      anger: 0,
-      fear: 0,
-      disgust: 0,
-      neutral: 0,
-      happy: 0,
-      sad: 0,
-      surprise: 0,
-    };
-
-    reviews.forEach(review => {
-      emotionCounts[review.emotion]++;
-    });
-
-    return emotionCounts;
-  };
-
-  const emotionCounts = aggregateData(reviews);
+  const {
+    totalReviews,
+    emotionCounts,
+    emotionByGender,
+    emotionByDate,
+  } = stats;
 
   const data = {
     labels: ['Anger', 'Fear', 'Disgust', 'Neutral', 'Happy', 'Sad', 'Surprise'],
@@ -127,6 +114,35 @@ const CourseCharts = () => {
     ],
   };
 
+  const genderData = {
+    labels: ['Male Anger', 'Male Fear', 'Male Disgust', 'Male Neutral', 'Male Happy', 'Male Sad', 'Male Surprise', 'Female Anger', 'Female Fear', 'Female Disgust', 'Female Neutral', 'Female Happy', 'Female Sad', 'Female Surprise'],
+    datasets: [
+      {
+        label: 'Number of Reviews by Gender',
+        data: [
+          ...Object.values(emotionByGender.male),
+          ...Object.values(emotionByGender.female)
+        ],
+        backgroundColor: [
+          '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf',
+          '#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'
+        ],
+      },
+    ],
+  };
+
+  const dates = Object.keys(emotionByDate);
+  const emotionsByDateData = {
+    labels: dates,
+    datasets: ['anger', 'fear', 'disgust', 'neutral', 'happy', 'sad', 'surprise'].map((emotion, index) => ({
+      label: emotion.charAt(0).toUpperCase() + emotion.slice(1),
+      data: dates.map(date => emotionByDate[date][emotion]),
+      backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'][index],
+      fill: false,
+      borderColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf'][index]
+    }))
+  };
+
   const options = {
     responsive: true,
     plugins: {
@@ -141,7 +157,6 @@ const CourseCharts = () => {
   };
 
   return (
-    
     <div className="row">
       <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
         <div className="card">
@@ -153,7 +168,7 @@ const CourseCharts = () => {
       <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
         <div className="card">
           <div className="card-body">
-            <Line data={data} options={options} />
+            <Line data={emotionsByDateData} options={options} />
           </div>
         </div>
       </div>
@@ -174,6 +189,20 @@ const CourseCharts = () => {
       <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
         <div className="card">
           <div className="card-body">
+            <Radar data={radarData} options={options} />
+          </div>
+        </div>
+      </div>
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
+            <PolarArea data={polarAreaData} options={options} />
+          </div>
+        </div>
+      </div>
+      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
+        <div className="card">
+          <div className="card-body">
             <Scatter data={scatterData} options={options} />
           </div>
         </div>
@@ -188,14 +217,7 @@ const CourseCharts = () => {
       <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
         <div className="card">
           <div className="card-body">
-            <Radar data={radarData} options={options} />
-          </div>
-        </div>
-      </div>
-      <div className="col-xl-6 col-lg-6 col-md-12 mb-4">
-        <div className="card">
-          <div className="card-body">
-            <PolarArea data={polarAreaData} options={options} />
+            <Bar data={genderData} options={options} />
           </div>
         </div>
       </div>
