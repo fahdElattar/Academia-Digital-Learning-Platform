@@ -102,7 +102,7 @@ const MyCertificates = ({ pageName = 'My Certificates' }) => {
                 </div>
               ))
             ) : (
-              <p>No courses found</p>
+              <p>No certificates found</p>
             )}
           </div>
         </div>
