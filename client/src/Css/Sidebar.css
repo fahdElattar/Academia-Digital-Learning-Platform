@@ -6,7 +6,7 @@
     background-color: var(--lightGrey);
     border-right: 1px solid var(--softerGrey);
     display: flex;
-    flex-direction: row;
+    justify-content: center;
     padding: 1.2rem 0;
 }
 
@@ -156,4 +156,14 @@
 .right-side .links .link.active {
     border: 1px solid transparent;
     border-right-color: black;
+}
+
+.sidebar-icons {
+    color: var(--darkGrey);
+}
+
+@media (max-width: 900px) {
+    .sidebar .right-side {
+        display: none;
+    }
 }

@@ -186,19 +186,7 @@ const Professors = ({ pageName = 'Professors' }) => {
                         <h5 className="mb-0 text-capitalize">{professor.last_name} {professor.first_name}</h5>
                         <span className="text-muted text-capitalize">{professor.specialty_id?.name}</span>
                         <p className="text-muted text-capitalize m-0">{professor.sector_id?.name}</p>
-                        <div className="text-muted">{professor.phone_number}</div>
-                        <button className='btn btn-outline-secondary btn-sm mt-3 mb-2'>Discover</button>
-                        {/* { user?.type === 'admin' &&
-                        (
-                          <div className="d-flex flex-column justify-content-center align-items-center mt-3 mb-1">
-                            <button className="btn btn-outline-success btn-sm mb-2 font-12">
-                              <i className='bi bi-pencil me-2 font-12'></i>Edit
-                            </button>
-                            <button type='button' className="btn btn-outline-danger btn-sm font-12" onClick={(e) => handleDelete(professor._id)}>
-                              <i className='bi bi-trash me-2'></i>Delete
-                            </button>
-                          </div>
-                        )} */}
+                        <div className="text-muted">{professor.phone_number}</div>                        
                       </div>
                     </div>
                   </div>
@@ -217,7 +205,7 @@ const Professors = ({ pageName = 'Professors' }) => {
                     <div className="row mb-3">
                       <div className="col-sm-6">
                         <div className="form-group">
-                          <label htmlFor="formImage" className="form-control labelCursor textColor">
+                          <label htmlFor="formImage" className="form-control labelCursor textColor text-truncate">
                             <i className='bi bi-image me-3 textColor'></i>
                             {img_path ? img_name : 'Choose an image for the professor' }
                             

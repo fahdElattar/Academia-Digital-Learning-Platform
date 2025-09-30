@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import StarterPage from '../Components/StarterPage';
 import '../Css/Courses.css';
-import Pc from '../assets/img/pc.jpg';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 

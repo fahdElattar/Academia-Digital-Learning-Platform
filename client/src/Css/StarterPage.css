@@ -1,0 +1,25 @@
+.sidebar-space {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 21%;
+    overflow: hidden;
+}
+
+.content-space {
+    width: 79%;
+    margin-left: 21%;
+    padding: 0 2.6rem;
+}
+
+@media (max-width: 900px) {
+    .sidebar-space {
+        width: 12%;
+    }
+
+    .content-space {
+        width: 88%;
+        margin-left: 12%;
+        padding: 0 1.5rem;
+    }
+}

@@ -5,8 +5,8 @@ import '../Css/Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@gmail.com');
+  const [password, setPassword] = useState('12345678');
   const [role, setRole] = useState('Admin');
 
   const handleSubmit = async (e) => {

@@ -52,9 +52,37 @@ const Sidebar = () => {
         <div className="top-area">
           <ul className='links'>
             <li className='link logo'><i className="bi bi-mortarboard-fill"></i></li>
-            <li className='link'><i className="bi bi-grid"></i></li>
-            <li className='link'><i className="bi bi-search"></i></li>
-            <li className='link'><i className="bi bi-gear"></i></li>
+
+            <li className='link'>
+              <Link to='/professors'>
+                <i className="bi bi-award sidebar-icons"></i>
+              </Link>
+            </li>
+            <li className='link'>
+              <Link to='/students'>
+                <i className="bi bi-people sidebar-icons"></i>
+              </Link>
+            </li>
+            <li className='link'>
+              <Link to='/courses'>
+                <i className="bi bi-journal-bookmark sidebar-icons"></i>
+              </Link>
+            </li>
+            <li className='link'>
+              <Link to='/sectors'>
+                <i className="bi bi-collection sidebar-icons"></i>
+              </Link>
+            </li>
+            <li className='link'>
+              <Link to='/specialties'>
+                <i className="bi bi-check-square sidebar-icons"></i>
+              </Link>
+            </li>
+            <li className='link'>
+              <Link to='/departements'>
+                <i className="bi bi-building sidebar-icons"></i>
+              </Link>
+            </li>
           </ul>
         </div>
         <div className="down-area">
@@ -70,17 +98,11 @@ const Sidebar = () => {
       <div className="right-side">
         <div className="logo-name">
           <h2>Academia</h2>
-            <a href=''>
-              <i className="bi bi-grid"></i>
-            </a>
         </div>
         <div className="pagination">
           <ul className='links'>
             <li>
-              <a href="index.html" className='active'>General</a>
-            </li>
-            <li>
-              <a href="index.html">My Space</a>
+              <Link to="/courses" className='active'>General</Link>
             </li>
           </ul>
         </div>
@@ -127,12 +149,6 @@ const Sidebar = () => {
           <div className='extra'>
           <h6>EXTRA</h6>
           <ul className='links'>
-            {/* <li className='link'>
-              <a>
-                <i className="bi bi-chat-dots-fill"></i>
-                Contact
-              </a>
-            </li> */}
             <li className='link'>
               <Link to='/mycourses'>
                 <i className="bi bi-building-fill"></i>

@@ -8,6 +8,12 @@
     border-radius: 2rem 0 0 2rem;
 }
 
+@media (max-width: 569px) {
+    .navbar form, .navbar form input {
+        width: 100%;
+    }
+}
+
 .navbar form button {
     border-color: var(--softerGrey);
     border-radius: 0 2rem 2rem 0;
