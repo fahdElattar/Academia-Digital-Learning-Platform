@@ -16,7 +16,7 @@ def change_audio_format(audio_path, target_format='wav'):
     base_name = os.path.splitext(os.path.basename(audio_path))[0]
     new_audio_path = os.path.join(audio_folder, f"{base_name}.{target_format}")
 
-    ffmpeg_path = r'C:\Users\Asmaa\Desktop\ffmpeg_full_build\bin\ffmpeg.exe'
+    ffmpeg_path = r'C:\Users\Fahd\Desktop\ffmpeg_full_build\bin\ffmpeg.exe'
 
     result = subprocess.call([ffmpeg_path, '-i', audio_path, new_audio_path])
     if result != 0:
